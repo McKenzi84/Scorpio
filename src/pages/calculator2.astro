@@ -1,0 +1,37 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CalculatorsAccordion from "../components/CalculatorsAccordion.astro";
+---
+
+<Layout
+  title="Calculators V2 | Scorpio Tech"
+  description="Grouped engineering tools in a professional dashboard layout."
+>
+  <div class="space-y-8 py-6 max-w-4xl mx-auto">
+    <div class="space-y-4 text-center mb-12">
+      <div
+        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono uppercase tracking-widest"
+      >
+        Dashboard V2.0
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">
+        Professional <span class="text-blue-500">Workshop</span>
+      </h1>
+      <p class="text-slate-400 max-w-xl mx-auto">
+        All your critical performance calculations organized into searchable,
+        expandable sections.
+      </p>
+    </div>
+
+    <CalculatorsAccordion />
+
+    <!-- <div class="pt-12 text-center">
+      <a
+        href="/calculator"
+        class="text-zinc-600 hover:text-zinc-400 text-sm font-mono transition-colors"
+      >
+        &lt; Back to Classic Grid View
+      </a>
+    </div> -->
+  </div>
+</Layout>

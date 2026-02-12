@@ -1,0 +1,20 @@
+---
+import { LOGO_SVG } from "../const";
+---
+
+<footer class="border-t border-zinc-900 bg-[#0a0a0c] py-8 mt-12">
+  <div class="container mx-auto px-4 flex flex-col items-center gap-4">
+    <div
+      class="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-300"
+      aria-hidden="true"
+    >
+      <Fragment set:html={LOGO_SVG} />
+    </div>
+    <div class="text-xs text-slate-400 font-mono tracking-widest uppercase">
+      Engineering for Excellence
+    </div>
+    <div class="text-xs text-slate-400 mt-4">
+      &copy; 2026 Scorpio Tech. All rights reserved.
+    </div>
+  </div>
+</footer>
