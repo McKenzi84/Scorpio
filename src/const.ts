@@ -6,6 +6,7 @@ export const NAV_LINKS = [
   // { href: '/', label: 'Home' },
   // { href: '/calculator', label: 'Calculators' },
   { href: '/calculator2', label: 'Calculators' },
+  { href: '/test', label: 'Test Page' },
   // { href: 'https://github.com/McKenzi84/ScorpioAstro', label: 'GitHub' },
 ];
 
@@ -20,15 +21,22 @@ export const LOGO_SVG = `
 export const CALCULATORS = [
   {
     id: 'dms-converter',
-    title: 'DMS Converter',
+    title: 'Angles Converter',
     path: './calculators/DmsConverter.astro',
     description: 'Convert between decimal degrees and degrees/minutes/seconds',
   },
-  {
-    id: 'dms-compact',
-    title: 'DMS Converter (Compact)',
-    path: './calculators/DmsConverterCompact.astro',
-    description: 'Compact layout: decimal and DMS inputs side-by-side',
+  // {
+  //   id: 'dms-compact',
+  //   title: 'DMS Converter (Compact)',
+  //   path: './calculators/DmsConverterCompact.astro',
+  //   description: 'Compact layout: decimal and DMS inputs side-by-side',
+  // },
+
+    {
+    id: 'bar-weight',
+    title: 'Bar Weight Calculator',
+    path: './calculators/BarWeight.astro',
+    description: 'Calculate the weight of a metal bar given its dimensions and density',
   },
 
   // Add more calculators here as they're created

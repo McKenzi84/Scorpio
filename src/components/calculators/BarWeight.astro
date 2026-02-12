@@ -1,0 +1,65 @@
+<section
+  class="rounded-2xl overflow-hidden shadow-2xl border border-zinc-800 p-4 bg-gray-400 items-center justify-center text-center glass"
+  aria-label="Bar weight calculator"
+>
+  <div class="form-grid items-center justify-center">
+    <div class="form-row border">
+      <label for="rod_diameter">Ø [mm]</label>
+      <input id="rod_diameter" type="number" value="16" />
+    </div>
+
+    <div class="form-row">
+      <label for="rod_length">L [mm]</label>
+      <input id="rod_length" type="number" value="330" />
+    </div>
+
+    <div class="form-row">
+      <label for="rod_density">Density [g/cm³]</label>
+      <input id="rod_density" type="number" value="14.8" step="0.01" />
+    </div>
+  </div>
+
+  <h3 id="rod_weight_out" class="mt-4 text-2xl text-fuchsia-900"></h3>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const d = document.getElementById("rod_diameter");
+    const L = document.getElementById("rod_length");
+    const rho = document.getElementById("rod_density");
+    const out = document.getElementById("rod_weight_out");
+
+    function calc() {
+      const r_cm = d.value / 2 / 10;
+      const L_cm = L.value / 10;
+      const vol = Math.PI * r_cm ** 2 * L_cm;
+      const mass = vol * rho.value;
+      out.textContent = `${mass.toFixed(0)} g`;
+    }
+
+    [d, L, rho].forEach((el) => el.addEventListener("input", calc));
+    calc();
+  });
+</script>
+
+<style>
+  .form-grid {
+    display: grid;
+    gap: 12px;
+    max-width: 420px;
+  }
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid rgb(209 213 219); /* light border */
+    background: rgb(29, 55, 82); /* light bg */
+  }
+  .form-row input {
+    background: rgb(98, 106, 116); /* light bg */
+  }
+</style>

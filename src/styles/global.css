@@ -142,3 +142,9 @@ button:focus-visible {
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+/* Prevent layout shift from scrollbar appearing/disappearing */
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
