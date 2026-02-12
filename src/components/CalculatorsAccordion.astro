@@ -2,12 +2,13 @@
 // CalculatorsAccordion.astro - Loads calculators from const.ts collection
 import { CALCULATORS } from "../const";
 import DmsConverter from "./calculators/DmsConverter.astro";
-import DmsConverter2 from "./calculators/DmsConverter2.astro";
+import DmsConverterCompact from "./calculators/DmsConverterCompact.astro";
 
 // Map calculator IDs to components
 const componentMap: Record<string, any> = {
   "dms-converter": DmsConverter,
-  "dms-converter2": DmsConverter2,
+  "dms-compact": DmsConverterCompact,
+
   // Add more calculator components here
 };
 

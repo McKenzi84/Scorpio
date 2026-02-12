@@ -25,11 +25,12 @@ export const CALCULATORS = [
     description: 'Convert between decimal degrees and degrees/minutes/seconds',
   },
   {
-    id: 'dms-converter2',
-    title: 'DMS Converter2',
-    path: './calculators/DmsConverter2.astro',
-    description: 'Convert between decimal degrees and degrees/minutes/seconds',
+    id: 'dms-compact',
+    title: 'DMS Converter (Compact)',
+    path: './calculators/DmsConverterCompact.astro',
+    description: 'Compact layout: decimal and DMS inputs side-by-side',
   },
+
   // Add more calculators here as they're created
   // {
   //   id: 'machining-calc',
