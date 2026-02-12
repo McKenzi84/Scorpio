@@ -1,65 +1,99 @@
-<section
-  class="rounded-2xl overflow-hidden shadow-2xl border border-zinc-800 p-4 bg-gray-400 items-center justify-center text-center glass"
-  aria-label="Bar weight calculator"
+<div
+  class="glass p-8 rounded-2xl w-full max-w-md mx-auto shadow-2xl"
+  role="region"
+  aria-labelledby="barweight-title"
 >
-  <div class="form-grid items-center justify-center">
-    <div class="form-row border">
-      <label for="rod_diameter">Ø [mm]</label>
-      <input id="rod_diameter" type="number" value="16" />
-    </div>
-
-    <div class="form-row">
-      <label for="rod_length">L [mm]</label>
-      <input id="rod_length" type="number" value="330" />
-    </div>
-
-    <div class="form-row">
-      <label for="rod_density">Density [g/cm³]</label>
-      <input id="rod_density" type="number" value="14.8" step="0.01" />
+  <div class="flex justify-between items-center mb-4">
+    <h2
+      id="barweight-title"
+      class="text-xl font-bold text-white tracking-tight"
+    >
+      Bar Weight Calculator
+    </h2>
+    <div
+      class="text-[10px] font-mono text-blue-500 uppercase tracking-widest bg-blue-500/10 px-2 py-1 rounded"
+    >
+      Metal.v1
     </div>
   </div>
 
-  <h3 id="rod_weight_out" class="mt-4 text-2xl text-fuchsia-900"></h3>
-</section>
+  <div class="space-y-4">
+    <div class="space-y-1">
+      <label
+        for="rod_diameter"
+        class="text-xs font-mono text-slate-400 uppercase">Diameter (mm)</label
+      >
+      <input
+        id="rod_diameter"
+        type="number"
+        value="16"
+        class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 focus:border-blue-500 text-slate-100 text-sm"
+      />
+    </div>
+
+    <div class="space-y-1">
+      <label for="rod_length" class="text-xs font-mono text-slate-400 uppercase"
+        >Length (mm)</label
+      >
+      <input
+        id="rod_length"
+        type="number"
+        value="330"
+        class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 focus:border-blue-500 text-slate-100 text-sm"
+      />
+    </div>
+
+    <div class="space-y-1">
+      <label
+        for="rod_density"
+        class="text-xs font-mono text-slate-400 uppercase"
+        >Density (g/cm³)</label
+      >
+      <input
+        id="rod_density"
+        type="number"
+        value="14.8"
+        step="0.01"
+        class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 focus:border-blue-500 text-slate-100 text-sm"
+      />
+    </div>
+
+    <div class="pt-2 border-t border-zinc-800/30">
+      <div class="text-sm text-slate-400">Estimated mass</div>
+      <div id="rod_weight_out" class="mt-2 text-2xl font-bold text-white">
+        0 g
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const d = document.getElementById("rod_diameter");
-    const L = document.getElementById("rod_length");
-    const rho = document.getElementById("rod_density");
-    const out = document.getElementById("rod_weight_out");
+  const d = document.getElementById("rod_diameter");
+  const L = document.getElementById("rod_length");
+  const rho = document.getElementById("rod_density");
+  const out = document.getElementById("rod_weight_out");
 
-    function calc() {
-      const r_cm = d.value / 2 / 10;
-      const L_cm = L.value / 10;
-      const vol = Math.PI * r_cm ** 2 * L_cm;
-      const mass = vol * rho.value;
-      out.textContent = `${mass.toFixed(0)} g`;
-    }
+  function calc() {
+    const diam = parseFloat(d.value) || 0;
+    const len = parseFloat(L.value) || 0;
+    const density = parseFloat(rho.value) || 0;
 
-    [d, L, rho].forEach((el) => el.addEventListener("input", calc));
-    calc();
-  });
+    // Convert mm -> cm for volume (1 cm = 10 mm)
+    const r_cm = diam / 2 / 10;
+    const L_cm = len / 10;
+    const vol = Math.PI * Math.pow(r_cm, 2) * L_cm; // cm^3
+    const mass = vol * density; // g
+
+    out.textContent = `${mass.toFixed(1)} g`;
+  }
+
+  [d, L, rho].forEach((el) => el.addEventListener("input", calc));
+  calc();
 </script>
 
 <style>
-  .form-grid {
-    display: grid;
-    gap: 12px;
-    max-width: 420px;
-  }
-
-  .form-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 10px 12px;
-    border-radius: 6px;
-    border: 1px solid rgb(209 213 219); /* light border */
-    background: rgb(29, 55, 82); /* light bg */
-  }
-  .form-row input {
-    background: rgb(98, 106, 116); /* light bg */
+  /* Small component-specific tweaks (keeps visual parity with DMS Converter) */
+  .glass input::placeholder {
+    color: rgba(226, 232, 240, 0.4);
   }
 </style>
