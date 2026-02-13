@@ -1,5 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import carbideSem from "../assets/carbide_sem.jpg";
 ---
 
 <Layout title="Sintered Carbide - Technical Information">
@@ -264,19 +266,13 @@ import Layout from "../layouts/Layout.astro";
                     <div class="absolute inset-0 engineering-grid opacity-20">
                     </div>
                     <!-- Placeholder for technical diagram icon -->
-                    <svg
-                        class="w-24 h-24 text-blue-500/20 group-hover:text-blue-500/40 transition-colors"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
-                        ></path>
-                    </svg>
+                    <Image
+                        src={carbideSem}
+                        widths={[256, 512, 768]}
+                        sizes="(min-width: 768px) 256px, 100vw"
+                        alt="Sintered Carbide Microstructure SEM"
+                        class="w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity"
+                    />
                     <div
                         class="absolute bottom-4 text-[10px] font-mono text-zinc-600 uppercase"
                     >
