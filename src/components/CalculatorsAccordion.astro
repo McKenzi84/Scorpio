@@ -4,12 +4,14 @@ import { CALCULATORS } from "../const";
 import DmsConverter from "./calculators/DmsConverter.astro";
 import DmsConverterCompact from "./calculators/DmsConverterCompact.astro";
 import BarWeight from "./calculators/BarWeight.astro";
+import DrillingConditions from "./calculators/DrillingConditions.astro";
 
 // Map calculator IDs to components
 const componentMap: Record<string, any> = {
   "dms-converter": DmsConverter,
   "dms-compact": DmsConverterCompact,
   "bar-weight": BarWeight,
+  "drilling-conditions": DrillingConditions,
 
   // Add more calculator components here
 };

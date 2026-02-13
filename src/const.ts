@@ -38,6 +38,12 @@ export const CALCULATORS = [
     path: './calculators/BarWeight.astro',
     description: 'Calculate the weight of a metal bar given its dimensions and density',
   },
+      {
+    id: 'drilling-conditions',
+    title: 'Drilling Conditions Calculator',
+    path: './calculators/DrillingConditions.astro',
+    description: 'Calculate drilling parameters for various conditions',
+  },
 
   // Add more calculators here as they're created
   // {

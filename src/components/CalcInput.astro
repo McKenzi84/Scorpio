@@ -1,0 +1,52 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  type?: string;
+  value?: string | number;
+  step?: string | number;
+  min?: string | number;
+  max?: string | number;
+  placeholder?: string;
+  unit?: string;
+}
+
+const {
+  id,
+  label,
+  type = "number",
+  value = "",
+  step,
+  min,
+  max,
+  placeholder = "",
+  unit,
+} = Astro.props;
+---
+
+<div class="space-y-1">
+  <label for={id} class="text-xs font-mono text-slate-400 uppercase">
+    {label}
+  </label>
+
+  <div class="relative">
+    <input
+      id={id}
+      type={type}
+      value={value}
+      step={step}
+      min={min}
+      max={max}
+      placeholder={placeholder}
+      class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 focus:border-blue-500 focus:outline-none text-slate-100 text-sm transition-colors"
+    />
+
+    {
+      unit && (
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 pointer-events-none">
+          {unit}
+        </span>
+      )
+    }
+  </div>
+</div>

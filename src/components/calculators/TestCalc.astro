@@ -1,0 +1,45 @@
+---
+import DrillingConditions from "../../components/DrillingConditions.astro";
+---
+
+<div
+  class="glass p-8 rounded-2xl w-full max-w-md mx-auto shadow-2xl"
+  role="region"
+  aria-labelledby="barweight-title"
+>
+  <div class="flex justify-between items-center mb-4">
+    <h2
+      id="barweight-title"
+      class="text-xl font-bold text-white tracking-tight"
+    >
+      Calculator
+    </h2>
+
+    <div
+      class="text-[10px] font-mono text-blue-500 uppercase tracking-widest bg-blue-500/10 px-2 py-1 rounded"
+    >
+      Metal.v1
+    </div>
+  </div>
+
+  <DrillingConditions />
+</div>
+
+<script>
+  const a = document.getElementById("numberA");
+  const b = document.getElementById("numberB");
+  const c = document.getElementById("numberC");
+  const out = document.getElementById("calculation_result");
+
+  function calc() {
+    const numberA = parseFloat(a.value) || 0;
+    const numberB = parseFloat(b.value) || 0;
+    const numberC = parseFloat(c.value) || 0;
+
+    const result = numberA + numberB + numberC;
+    out.textContent = `${result} `;
+  }
+
+  [a, b, c].forEach((el) => el.addEventListener("input", calc));
+  calc();
+</script>
