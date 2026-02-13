@@ -1,77 +1,33 @@
-<div
-  class="glass p-8 rounded-2xl w-full max-w-md mx-auto shadow-2xl"
-  role="region"
-  aria-labelledby="barweight-title"
->
-  <div class="flex justify-between items-center mb-4">
-    <h2
-      id="barweight-title"
-      class="text-xl font-bold text-white tracking-tight"
-    >
-      Bar Weight Calculator
-    </h2>
-    <div
-      class="text-[10px] font-mono text-blue-500 uppercase tracking-widest bg-blue-500/10 px-2 py-1 rounded"
-    >
-      Metal.v1
-    </div>
+---
+// BarWeight.astro
+import CalcCard from "../CalcCard.astro";
+import CalcInput from "../CalcInput.astro";
+import CalcOutput from "../CalcOutput.astro";
+---
+
+<CalcCard title="Bar Weight Calculator" badge="Metal.v1">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <CalcInput id="rod_diameter" label="Diameter" value="16" unit="mm" />
+    <CalcInput id="rod_length" label="Length" value="330" unit="mm" />
+    <CalcInput
+      id="rod_density"
+      label="Density"
+      value="14.8"
+      step="0.01"
+      unit="g/cm³"
+    />
   </div>
 
-  <div class="space-y-4">
-    <div class="space-y-1">
-      <label
-        for="rod_diameter"
-        class="text-xs font-mono text-slate-400 uppercase">Diameter (mm)</label
-      >
-      <input
-        id="rod_diameter"
-        type="number"
-        value="16"
-        class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 focus:border-blue-500 text-slate-100 text-sm"
-      />
-    </div>
-
-    <div class="space-y-1">
-      <label for="rod_length" class="text-xs font-mono text-slate-400 uppercase"
-        >Length (mm)</label
-      >
-      <input
-        id="rod_length"
-        type="number"
-        value="330"
-        class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 focus:border-blue-500 text-slate-100 text-sm"
-      />
-    </div>
-
-    <div class="space-y-1">
-      <label
-        for="rod_density"
-        class="text-xs font-mono text-slate-400 uppercase"
-        >Density (g/cm³)</label
-      >
-      <input
-        id="rod_density"
-        type="number"
-        value="14.8"
-        step="0.01"
-        class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 focus:border-blue-500 text-slate-100 text-sm"
-      />
-    </div>
-
-    <div class="pt-2 border-t border-zinc-800/30">
-      <div class="text-sm text-slate-400">Estimated mass</div>
-      <div id="rod_weight_out" class="mt-2 text-2xl font-bold text-white">
-        0 g
-      </div>
-    </div>
+  <div class="pt-4 border-t border-zinc-800/30">
+    <CalcOutput id="rod_weight_out" label="Estimated mass" unit="g" value="0" />
   </div>
-</div>
+</CalcCard>
 
 <script>
-  const d = document.getElementById("rod_diameter");
-  const L = document.getElementById("rod_length");
-  const rho = document.getElementById("rod_density");
-  const out = document.getElementById("rod_weight_out");
+  const d = document.getElementById("rod_diameter") as HTMLInputElement;
+  const L = document.getElementById("rod_length") as HTMLInputElement;
+  const rho = document.getElementById("rod_density") as HTMLInputElement;
+  const out = document.getElementById("rod_weight_out") as HTMLElement;
 
   function calc() {
     const diam = parseFloat(d.value) || 0;
@@ -84,16 +40,9 @@
     const vol = Math.PI * Math.pow(r_cm, 2) * L_cm; // cm^3
     const mass = vol * density; // g
 
-    out.textContent = `${mass.toFixed(1)} g`;
+    out.textContent = `${mass.toFixed(1)}`;
   }
 
-  [d, L, rho].forEach((el) => el.addEventListener("input", calc));
+  [d, L, rho].forEach((el) => el?.addEventListener("input", calc));
   calc();
 </script>
-
-<style>
-  /* Small component-specific tweaks (keeps visual parity with DMS Converter) */
-  .glass input::placeholder {
-    color: rgba(226, 232, 240, 0.4);
-  }
-</style>

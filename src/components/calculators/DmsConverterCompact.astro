@@ -1,105 +1,61 @@
 ---
-// DMS Converter (Compact)
+// DmsConverterCompact.astro
+import CalcCard from "../CalcCard.astro";
+import CalcInput from "../CalcInput.astro";
+import CalcOutput from "../CalcOutput.astro";
 ---
 
-<div
-  class="glass p-4 rounded-lg w-full max-w-lg mx-auto shadow-md"
-  role="region"
-  aria-labelledby="dms-compact-title"
->
-  <div class="flex items-center justify-between mb-3">
-    <h3 id="dms-compact-title" class="text-lg font-semibold text-white">
-      DMS Converter — Compact (Readable)
-    </h3>
-    <div
-      class="text-[10px] font-mono text-blue-400 uppercase bg-blue-500/8 px-2 py-0.5 rounded"
-    >
-      Angle.v1
-    </div>
-  </div>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
-    <div>
-      <label
-        for="decimal-input-compact"
-        class="block text-sm font-medium text-slate-200 mb-1"
-        >Decimal degrees</label
-      >
-      <input
+<CalcCard title="DMS Converter (Compact)" badge="Angle.v1">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Input Section -->
+    <div class="space-y-4">
+      <CalcInput
         id="decimal-input-compact"
+        label="Decimal Degrees"
         type="number"
         step="any"
-        aria-describedby="decimal-desc-compact"
-        class="w-full px-3 py-2 rounded-md bg-zinc-900 border border-zinc-800 focus:border-blue-500 text-slate-100 text-base font-medium"
         value="0"
       />
-      <p id="decimal-desc-compact" class="text-xs text-slate-400 mt-1">
+      <p class="text-[10px] text-slate-500 font-mono italic">
         Enter decimal degrees (e.g., 45.5)
       </p>
     </div>
 
-    <div>
+    <!-- Output Section -->
+    <div class="space-y-4 pt-4 md:pt-0 md:pl-6 md:border-l border-zinc-800/30">
       <div class="grid grid-cols-3 gap-2">
-        <div>
-          <label
-            for="dms-deg-compact"
-            class="block text-sm font-medium text-slate-200 mb-1"
-            >Degrees (°)</label
-          >
-          <input
-            id="dms-deg-compact"
-            type="number"
-            class="w-full px-2 py-2 rounded-md bg-zinc-900 border border-zinc-800 text-slate-100 text-center text-base font-medium"
-            value="0"
-          />
-        </div>
-        <div>
-          <label
-            for="dms-min-compact"
-            class="block text-sm font-medium text-slate-200 mb-1"
-            >Minutes (!)</label
-          >
-          <input
-            id="dms-min-compact"
-            type="number"
-            class="w-full px-2 py-2 rounded-md bg-zinc-900 border border-zinc-800 text-slate-100 text-center text-base font-medium"
-            value="0"
-          />
-        </div>
-        <div>
-          <label
-            for="dms-sec-compact"
-            class="block text-sm font-medium text-slate-200 mb-1"
-            >Seconds (″)</label
-          >
-          <input
-            id="dms-sec-compact"
-            type="number"
-            step="any"
-            class="w-full px-2 py-2 rounded-md bg-zinc-900 border border-zinc-800 text-slate-100 text-center text-base font-medium"
-            value="0"
-          />
-        </div>
+        <CalcInput id="dms-deg-compact" label="Deg (°)" value="0" />
+        <CalcInput id="dms-min-compact" label="Min (!)" value="0" />
+        <CalcInput id="dms-sec-compact" label="Sec (″)" value="0" step="any" />
       </div>
 
-      <div class="mt-3 flex items-center justify-between">
-        <div class="text-sm text-slate-300">
-          Result: <strong id="dec-result" class="text-white">0.000000</strong>
-        </div>
-        <div class="text-sm text-slate-400">Live sync</div>
+      <div class="pt-4 border-t border-zinc-800/20">
+        <CalcOutput
+          id="dec-result"
+          label="Calculated Result"
+          value="0.000000"
+        />
       </div>
     </div>
   </div>
-</div>
+</CalcCard>
 
 <script>
-  const decimalInput = document.getElementById("decimal-input-compact");
-  const degInput = document.getElementById("dms-deg-compact");
-  const minInput = document.getElementById("dms-min-compact");
-  const secInput = document.getElementById("dms-sec-compact");
-  const decResult = document.getElementById("dec-result");
+  const decimalInput = document.getElementById(
+    "decimal-input-compact",
+  ) as HTMLInputElement;
+  const degInput = document.getElementById(
+    "dms-deg-compact",
+  ) as HTMLInputElement;
+  const minInput = document.getElementById(
+    "dms-min-compact",
+  ) as HTMLInputElement;
+  const secInput = document.getElementById(
+    "dms-sec-compact",
+  ) as HTMLInputElement;
+  const decResult = document.getElementById("dec-result") as HTMLElement;
 
-  function convertDecToDms(val) {
+  function convertDecToDms(val: number) {
     const absDec = Math.abs(val);
     const d = Math.floor(absDec);
     const m = Math.floor((absDec - d) * 60);
@@ -111,7 +67,7 @@
     };
   }
 
-  function convertDmsToDec(d, m, s) {
+  function convertDmsToDec(d: number, m: number, s: number) {
     const sign = d < 0 ? -1 : 1;
     const res = (Math.abs(d) + m / 60 + s / 3600) * sign;
     return res.toFixed(6);
@@ -123,7 +79,8 @@
     if (degInput) degInput.value = dms.d;
     if (minInput) minInput.value = dms.m;
     if (secInput) secInput.value = dms.s;
-    if (decResult) decResult.textContent = parseFloat(val).toFixed(6);
+    if (decResult)
+      decResult.textContent = parseFloat(val.toString()).toFixed(6);
   }
 
   function updateFromDms() {

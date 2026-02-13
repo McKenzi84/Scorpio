@@ -1,113 +1,71 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #3f3f49;
-  --foreground: #e2e8f0;
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --card-bg: #15151a;
-  --border: #26262e;
-  --accent: #8b5cf6;
+@theme {
+  --font-family-sans: "Google Sans Flex", "Outfit", ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-blue: #3b82f6;
+  --color-brand-blue-hover: #2563eb;
+  --color-brand-purple: #8b5cf6;
+
+  --color-surface-bg: #3f3f49;
+  --color-surface-card: #15151a;
+  --color-surface-input: #18181e;
+
+  --color-border-default: #26262e;
+  --color-border-input: #333340;
 }
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: 'Outfit', sans-serif;
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: 700;
-  letter-spacing: -0.025em;
-}
-
-.engineering-grid {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-.glass {
+@utility glass {
   background: rgba(21, 21, 26, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Utility classes moved to inline components for Tailwind v4 compatibility */
-
-/* Accessibility utilities */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+@utility engineering-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
-.sr-only.focus\:not-sr-only:focus,
-.focus\:not-sr-only:focus {
-  position: static;
-  width: auto;
-  height: auto;
-  padding: inherit;
-  margin: inherit;
-  overflow: visible;
-  clip: auto;
-  white-space: normal;
+/* Calculator Shared Styles */
+@utility calc-card {
+  @apply glass p-8 rounded-2xl w-full shadow-2xl;
+  background-color: #323b53;
 }
 
-/* Focus styles for better visibility */
-:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
+@utility calc-input {
+  @apply w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 focus:border-brand-blue focus:outline-none transition-all duration-200 text-slate-100 text-sm font-medium;
 }
 
-/* Improve form control contrast */
-input[type="number"],
-input[type="text"],
-input[type="email"],
-input[type="password"],
-textarea,
-select {
-  background-color: rgb(24, 24, 30);
-  border-color: rgb(51, 51, 64);
-  color: rgb(226, 232, 240);
+@utility calc-input-large {
+  @apply calc-input text-xl font-semibold;
 }
 
-input[type="number"]:focus,
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-textarea:focus,
-select:focus {
-  border-color: rgb(59, 130, 246);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+@utility calc-label {
+  @apply text-xs font-mono text-slate-400 uppercase font-semibold mb-1 block;
 }
 
-/* Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+@utility calc-output {
+  @apply mt-2 text-2xl font-bold text-white;
+}
+
+@utility calc-output-small {
+  @apply p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-slate-100 text-sm font-medium h-9 flex items-center;
+}
+
+@utility calc-badge {
+  @apply text-[10px] font-mono text-brand-blue uppercase tracking-widest bg-brand-blue/10 px-2 py-1 rounded;
+}
+
+/* Base Styles */
+body {
+  background-color: var(--color-surface-bg);
+  color: #e2e8f0;
+  font-family: var(--font-family-sans);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Improve scrollbar visibility */
@@ -129,22 +87,26 @@ select:focus {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* Link focus visible styles */
-a:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-/* Button focus visible styles */
-button:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
 /* Prevent layout shift from scrollbar appearing/disappearing */
 html {
   overflow-y: scroll;
   scrollbar-gutter: stable;
+}
+
+/* Custom focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-brand-blue);
+  outline-offset: 2px;
+}
+
+@layer base {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold tracking-tight;
+  }
 }

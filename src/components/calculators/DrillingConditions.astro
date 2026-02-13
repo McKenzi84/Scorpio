@@ -1,104 +1,85 @@
-<div class="glass p-8 rounded-2xl w-full max-w-xl mx-auto shadow-2xl">
-  <h2 class="text-xl font-bold text-white mb-6">
-    Drilling Parameters Calculator
-  </h2>
+---
+// DrillingConditions.astro
+import CalcCard from "../CalcCard.astro";
+import CalcInput from "../CalcInput.astro";
+import CalcOutput from "../CalcOutput.astro";
+---
 
-  <div class="space-y-4">
-    <!-- Tool Geometry -->
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <label class="text-xs text-slate-400">Drill Diameter DC [mm]</label>
-        <input id="d" type="number" value="10" class="input" />
-      </div>
-
-      <div>
-        <label class="text-xs text-slate-400">Cutting Edges Z</label>
-        <input id="z" type="number" value="2" class="input" />
-      </div>
+<CalcCard title="Drilling Parameters Calculator">
+  <div class="space-y-8">
+    <!-- Tool & Process Parameters -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <CalcInput id="d" label="Diameter DC" unit="mm" value="10" />
+      <CalcInput id="z" label="Edges Z" value="2" />
+      <CalcInput id="depth" label="Hole Depth ld" unit="mm" value="20" />
+      <CalcInput id="vc" label="Speed Vc" unit="m/min" value="100" />
     </div>
 
-    <!-- Speed -->
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <label class="text-xs text-slate-400">Cutting Speed Vc [m/min]</label>
-        <input id="vc" type="number" value="100" class="input" />
-      </div>
-
-      <div>
-        <label class="text-xs text-slate-400">Spindle Speed n [RPM]</label>
-        <input id="rpm" type="number" value="3183" class="input" />
-      </div>
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      <CalcInput id="rpm" label="Speed n" unit="RPM" value="3183" />
+      <CalcInput id="feed_min" label="Feed vf" unit="mm/min" value="300" />
+      <CalcInput id="feed_rev" label="Feed fr" unit="mm/rev" value="0.1" />
     </div>
 
-    <!-- Feed -->
-    <div class="grid grid-cols-3 gap-4">
-      <div>
-        <label class="text-xs text-slate-400">Feed vf [mm/min]</label>
-        <input id="feed_min" type="number" value="300" class="input" />
+    <!-- Standardized Results Section -->
+    <div class="pt-6 border-t border-zinc-800/30">
+      <div
+        class="text-xs font-mono text-blue-400 uppercase tracking-wider mb-4"
+      >
+        Calculation Results
       </div>
-
-      <div>
-        <label class="text-xs text-slate-400">Feed fr [mm/rev]</label>
-        <input id="feed_rev" type="number" value="0.1" class="input" />
-      </div>
-
-      <div>
-        <label class="text-xs text-slate-400">Feed fz [mm/tooth]</label>
-        <div id="feed_tooth" class="output">-</div>
-      </div>
-    </div>
-
-    <!-- Depth & Time -->
-    <div class="grid grid-cols-3 gap-4">
-      <div>
-        <label class="text-xs text-slate-400">Hole Depth ld [mm]</label>
-        <input id="depth" type="number" value="20" class="input" />
-      </div>
-
-      <div>
-        <label class="text-xs text-slate-400">Drilling Time [min]</label>
-        <div id="time_min" class="output">-</div>
-      </div>
-
-      <div>
-        <label class="text-xs text-slate-400">Drilling Time [s]</label>
-        <div id="time_s" class="output">-</div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <CalcOutput
+          id="feed_tooth"
+          label="Feed per tooth"
+          unit="mm/tooth"
+          value="0.05"
+        />
+        <CalcOutput
+          id="time_min"
+          label="Drilling Time"
+          unit="min"
+          value="0.067"
+        />
+        <CalcOutput
+          id="time_s"
+          label="Drilling Time"
+          unit="seconds"
+          value="4.0"
+        />
       </div>
     </div>
   </div>
-</div>
+</CalcCard>
 
 <script>
-  const d = document.getElementById("d");
-  const z = document.getElementById("z");
-  const vc = document.getElementById("vc");
-  const rpm = document.getElementById("rpm");
-  const feed_min = document.getElementById("feed_min");
-  const feed_rev = document.getElementById("feed_rev");
-  const feed_tooth = document.getElementById("feed_tooth");
-  const depth = document.getElementById("depth");
-  const time_min = document.getElementById("time_min");
-  const time_s = document.getElementById("time_s");
+  const d = document.getElementById("d") as HTMLInputElement;
+  const z = document.getElementById("z") as HTMLInputElement;
+  const vc = document.getElementById("vc") as HTMLInputElement;
+  const rpm = document.getElementById("rpm") as HTMLInputElement;
+  const feed_min = document.getElementById("feed_min") as HTMLInputElement;
+  const feed_rev = document.getElementById("feed_rev") as HTMLInputElement;
+  const feed_tooth = document.getElementById("feed_tooth") as HTMLElement;
+  const depth = document.getElementById("depth") as HTMLInputElement;
+  const time_min = document.getElementById("time_min") as HTMLElement;
+  const time_s = document.getElementById("time_s") as HTMLElement;
 
-  function num(el) {
-    return parseFloat(el.value) || 0;
+  function num(el: HTMLInputElement) {
+    return parseFloat(el?.value) || 0;
   }
 
   /* --------------------------
      SPEED SYNC
      Vc = π D n / 1000
-     n  = (Vc * 1000) / (π D)
+     n = (Vc * 1000) / (π D)
   ---------------------------*/
-
-  function syncSpeed(source) {
+  function syncSpeed(source: string) {
     const D = num(d);
-
     if (D === 0) return;
 
     if (source === "rpm") {
       vc.value = ((Math.PI * D * num(rpm)) / 1000).toFixed(2);
     }
-
     if (source === "vc" || source === "d") {
       rpm.value = ((num(vc) * 1000) / (Math.PI * D)).toFixed(0);
     }
@@ -110,11 +91,9 @@
      fr = vf / n
      fz = fr / Z
   ---------------------------*/
-
-  function syncFeed(source) {
+  function syncFeed(source: string) {
     const nVal = num(rpm);
     const zVal = num(z);
-
     if (nVal === 0 || zVal === 0) return;
 
     if (source === "feed_min" || source === "rpm" || source === "z") {
@@ -122,7 +101,6 @@
       feed_rev.value = fr.toFixed(3);
       feed_tooth.textContent = (fr / zVal).toFixed(3);
     }
-
     if (source === "feed_rev") {
       const vf = num(feed_rev) * nVal;
       feed_min.value = vf.toFixed(1);
@@ -134,13 +112,10 @@
      DRILLING TIME
      Tc = ld / vf
   ---------------------------*/
-
   function calcTime() {
     const vf = num(feed_min);
     const ld = num(depth);
-
     if (vf === 0) return;
-
     const tMin = ld / vf;
     time_min.textContent = tMin.toFixed(3);
     time_s.textContent = (tMin * 60).toFixed(1);
@@ -149,57 +124,26 @@
   /* --------------------------
      EVENT LISTENERS
   ---------------------------*/
-
-  rpm.addEventListener("input", () => {
+  rpm?.addEventListener("input", () => {
     syncSpeed("rpm");
     syncFeed("rpm");
     calcTime();
   });
-
-  vc.addEventListener("input", () => syncSpeed("vc"));
-  d.addEventListener("input", () => syncSpeed("d"));
-
-  feed_min.addEventListener("input", () => {
+  vc?.addEventListener("input", () => syncSpeed("vc"));
+  d?.addEventListener("input", () => syncSpeed("d"));
+  feed_min?.addEventListener("input", () => {
     syncFeed("feed_min");
     calcTime();
   });
-
-  feed_rev.addEventListener("input", () => {
+  feed_rev?.addEventListener("input", () => {
     syncFeed("feed_rev");
     calcTime();
   });
-
-  z.addEventListener("input", () => syncFeed("z"));
-  depth.addEventListener("input", calcTime);
+  z?.addEventListener("input", () => syncFeed("z"));
+  depth?.addEventListener("input", calcTime);
 
   /* Initial calculation */
   syncSpeed("vc");
   syncFeed("feed_min");
   calcTime();
 </script>
-
-<style>
-  .input {
-    width: 100%;
-    padding: 6px 10px;
-    background: #111827;
-    border: 1px solid #1f2937;
-    border-radius: 8px;
-    color: white;
-    font-size: 14px;
-  }
-
-  .input:focus {
-    outline: none;
-    border-color: #3b82f6;
-  }
-
-  .output {
-    padding: 6px 10px;
-    background: #0f172a;
-    border: 1px solid #1f2937;
-    border-radius: 8px;
-    color: white;
-    font-size: 14px;
-  }
-</style>

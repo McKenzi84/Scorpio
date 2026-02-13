@@ -1,0 +1,302 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Sintered Carbide - Technical Information">
+    <div class="max-w-4xl mx-auto space-y-12">
+        <!-- Hero Section -->
+        <section class="text-center py-12">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-[10px] font-mono font-bold tracking-[0.2em] text-blue-400 uppercase bg-blue-500/10 border border-blue-500/20 rounded-full"
+            >
+                Advanced Hardmetals
+            </div>
+            <h1
+                class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-6"
+            >
+                Sintered Carbide
+            </h1>
+            <p
+                class="text-lg text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed"
+            >
+                A metal matrix composite where carbide particles are aggregated
+                together by a metallic binder. Known for exceptional hardness
+                and thermal stability.
+            </p>
+        </section>
+
+        <!-- Composition Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div
+                class="glass p-8 rounded-2xl border-l-4 border-blue-500 shadow-xl"
+            >
+                <h2
+                    class="text-xl font-bold text-white mb-6 flex items-center gap-2"
+                >
+                    <svg
+                        class="w-5 h-5 text-blue-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                        ></path>
+                    </svg>
+                    Chemical Composition
+                </h2>
+                <div class="space-y-6">
+                    <div>
+                        <div
+                            class="flex justify-between text-sm font-bold text-white mb-2"
+                        >
+                            <span>Tungsten Carbide (WC)</span>
+                            <span class="text-blue-400">75% — 97%</span>
+                        </div>
+                        <div
+                            class="h-2 bg-zinc-900 rounded-full overflow-hidden"
+                        >
+                            <div class="h-full bg-blue-500 w-[90%]"></div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2 font-mono italic">
+                            Primary hard phase responsible for wear resistance.
+                        </p>
+                    </div>
+                    <div>
+                        <div
+                            class="flex justify-between text-sm font-bold text-white mb-2"
+                        >
+                            <span>Cobalt Binder (Co)</span>
+                            <span class="text-zinc-400">3% — 25%</span>
+                        </div>
+                        <div
+                            class="h-2 bg-zinc-900 rounded-full overflow-hidden"
+                        >
+                            <div class="h-full bg-zinc-600 w-[10%]"></div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2 font-mono italic">
+                            Metallic matrix providing toughness and impact
+                            strength.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-8 rounded-2xl shadow-xl">
+                <h2 class="text-xl font-bold text-white mb-4">
+                    Core Properties
+                </h2>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3">
+                        <span
+                            class="w-12 text-[10px] font-mono text-zinc-500 pt-1"
+                            >HRA</span
+                        >
+                        <div>
+                            <span class="block text-sm font-bold text-slate-200"
+                                >86 — 93 Hardness</span
+                            >
+                            <span class="text-xs text-slate-500"
+                                >Exceptional resistance to deformation and
+                                abrasion.</span
+                            >
+                        </div>
+                    </li>
+                    <li
+                        class="flex items-start gap-3 border-t border-white/5 pt-4"
+                    >
+                        <span
+                            class="w-12 text-[10px] font-mono text-zinc-500 pt-1"
+                            >TEMP</span
+                        >
+                        <div>
+                            <span class="block text-sm font-bold text-slate-200"
+                                >Thermal Stability</span
+                            >
+                            <span class="text-xs text-slate-500"
+                                >Retains hardness at temperatures above 800°C.</span
+                            >
+                        </div>
+                    </li>
+                    <li
+                        class="flex items-start gap-3 border-t border-white/5 pt-4"
+                    >
+                        <span
+                            class="w-12 text-[10px] font-mono text-zinc-500 pt-1"
+                            >COMP</span
+                        >
+                        <div>
+                            <span class="block text-sm font-bold text-slate-200"
+                                >Compression Strength</span
+                            >
+                            <span class="text-xs text-slate-500"
+                                >Higher than almost any other material (~6000
+                                MPa).</span
+                            >
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Manufacturing Process -->
+        <section class="space-y-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-black text-white tracking-tight">
+                    Manufacturing Process
+                </h2>
+                <p class="text-slate-400 text-sm mt-2">
+                    The journey from powder to precision tool.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {
+                    [
+                        {
+                            step: "01",
+                            title: "Milling",
+                            desc: "Wet grinding of WC and Cobalt powder to create a homogeneous mix.",
+                        },
+                        {
+                            step: "02",
+                            title: "Pressing",
+                            desc: "Forming the powder into 'green' compacts via uniaxial or isostatic press.",
+                        },
+                        {
+                            step: "03",
+                            title: "Sintering",
+                            desc: "Liquid phase bonding at 1300-1500°C in a vacuum furnace.",
+                        },
+                        {
+                            step: "04",
+                            title: "Finishing",
+                            desc: "Precision diamond-grinding and PVD/CVD coating application.",
+                        },
+                    ].map((item) => (
+                        <div class="glass p-6 rounded-xl border border-white/5 group hover:border-blue-500/30 transition-colors">
+                            <div class="text-2xl font-black text-zinc-800 mb-2 group-hover:text-blue-500/20 transition-colors leading-none">
+                                {item.step}
+                            </div>
+                            <h3 class="font-bold text-white mb-2">
+                                {item.title}
+                            </h3>
+                            <p class="text-xs text-slate-500 leading-relaxed font-medium">
+                                {item.desc}
+                            </p>
+                        </div>
+                    ))
+                }
+            </div>
+        </section>
+
+        <!-- Applications -->
+        <section
+            class="glass p-10 rounded-3xl border border-white/5 shadow-2xl overflow-hidden relative"
+        >
+            <div
+                class="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[100px] -mr-32 -mt-32"
+            >
+            </div>
+
+            <div
+                class="relative z-10 flex flex-col md:flex-row gap-12 items-center"
+            >
+                <div class="flex-1 space-y-6">
+                    <h2
+                        class="text-3xl font-black text-white tracking-tight leading-none"
+                    >
+                        Industrial Applications
+                    </h2>
+                    <p class="text-slate-400 font-medium">
+                        Sintered carbide is the backbone of modern mass
+                        production, enabling high-speed machining and extreme
+                        wear resistance.
+                    </p>
+                    <div
+                        class="grid grid-cols-2 gap-x-8 gap-y-4 pt-4 border-t border-white/5"
+                    >
+                        <div class="space-y-1">
+                            <span
+                                class="text-xs font-mono text-blue-400 uppercase tracking-widest"
+                                >Metalworking</span
+                            >
+                            <p class="text-sm text-slate-300 font-bold">
+                                Turning & Milling Inserts
+                            </p>
+                        </div>
+                        <div class="space-y-1">
+                            <span
+                                class="text-xs font-mono text-blue-400 uppercase tracking-widest"
+                                >Mining</span
+                            >
+                            <p class="text-sm text-slate-300 font-bold">
+                                Rock Drills & Cutters
+                            </p>
+                        </div>
+                        <div class="space-y-1">
+                            <span
+                                class="text-xs font-mono text-blue-400 uppercase tracking-widest"
+                                >Medical</span
+                            >
+                            <p class="text-sm text-slate-300 font-bold">
+                                Surgical Instruments
+                            </p>
+                        </div>
+                        <div class="space-y-1">
+                            <span
+                                class="text-xs font-mono text-blue-400 uppercase tracking-widest"
+                                >Tooling</span
+                            >
+                            <p class="text-sm text-slate-300 font-bold">
+                                Wire Drawing Dies
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="w-full md:w-64 aspect-square bg-zinc-900/50 rounded-2xl border border-white/10 flex items-center justify-center relative overflow-hidden group"
+                >
+                    <div class="absolute inset-0 engineering-grid opacity-20">
+                    </div>
+                    <!-- Placeholder for technical diagram icon -->
+                    <svg
+                        class="w-24 h-24 text-blue-500/20 group-hover:text-blue-500/40 transition-colors"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                        ></path>
+                    </svg>
+                    <div
+                        class="absolute bottom-4 text-[10px] font-mono text-zinc-600 uppercase"
+                    >
+                        Hardware Ref. C-2
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Quote/Summary -->
+        <div class="text-center py-12 border-t border-white/5">
+            <blockquote
+                class="text-xl text-slate-200 italic font-medium max-w-2xl mx-auto"
+            >
+                "Without sintered carbide, modern manufacturing speeds would
+                decrease by over 80%."
+            </blockquote>
+            <div class="mt-4 text-xs font-mono text-zinc-500">
+                Scorpio Hardmetal Archives &bullet; 2026 Edition
+            </div>
+        </div>
+    </div>
+</Layout>

@@ -5,7 +5,7 @@ export const BASE_URL = '';
 export const NAV_LINKS = [
   // { href: '/', label: 'Home' },
   // { href: '/calculator', label: 'Calculators' },
-  { href: '/calculator2', label: 'Calculators' },
+  { href: '/calculator', label: 'Calculators' },
   { href: '/test', label: 'Test Page' },
   // { href: 'https://github.com/McKenzi84/ScorpioAstro', label: 'GitHub' },
 ];
@@ -17,41 +17,5 @@ export const LOGO_SVG = `
 </svg>
 `;
 
-// Calculator definitions
-export const CALCULATORS = [
-  {
-    id: 'dms-converter',
-    title: 'Angles Converter',
-    path: './calculators/DmsConverter.astro',
-    description: 'Convert between decimal degrees and degrees/minutes/seconds',
-  },
-  // {
-  //   id: 'dms-compact',
-  //   title: 'DMS Converter (Compact)',
-  //   path: './calculators/DmsConverterCompact.astro',
-  //   description: 'Compact layout: decimal and DMS inputs side-by-side',
-  // },
-
-    {
-    id: 'bar-weight',
-    title: 'Bar Weight Calculator',
-    path: './calculators/BarWeight.astro',
-    description: 'Calculate the weight of a metal bar given its dimensions and density',
-  },
-      {
-    id: 'drilling-conditions',
-    title: 'Drilling Conditions Calculator',
-    path: './calculators/DrillingConditions.astro',
-    description: 'Calculate drilling parameters for various conditions',
-  },
-
-  // Add more calculators here as they're created
-  // {
-  //   id: 'machining-calc',
-  //   title: 'CNC & Machining',
-  //   path: './calculators/MachiningCalc.astro',
-  //   description: 'Professional machining calculations',
-  // },
-];
 
 

@@ -1,0 +1,18 @@
+---
+// CalcOutput.astro
+interface Props {
+    id: string;
+    label: string;
+    unit?: string;
+    value?: string | number;
+    class?: string;
+}
+
+const { id, label, unit, value = "-", class: className } = Astro.props;
+---
+
+<div class:list={["space-y-1", className]}>
+    <div class="text-sm text-slate-400 font-medium">{label}</div>
+    <div id={id} class="calc-output">{value}</div>
+    {unit && <div class="text-[10px] text-zinc-500 font-mono">{unit}</div>}
+</div>
