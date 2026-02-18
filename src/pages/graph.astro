@@ -1,0 +1,275 @@
+---
+import Layout from "../layouts/Layout.astro";
+import salesData from "../data/sales_data.json";
+---
+
+<Layout
+    title="Sales Analysis | Sunburst Graph"
+    description="Visual representation of sales breakdown by Customer, Supplier, and Maker."
+>
+    <div class="max-w-6xl mx-auto py-8 px-4 space-y-8">
+        <!-- Header -->
+        <div class="space-y-4 text-center">
+            <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono uppercase tracking-widest"
+            >
+                Data Analysis V1.0
+            </div>
+            <h1
+                class="text-4xl md:text-5xl font-bold text-white tracking-tight"
+            >
+                Sales <span class="text-blue-500">Sunburst</span>
+            </h1>
+            <p class="text-slate-400 max-w-xl mx-auto">
+                Deep dive into our 2025 sales hierarchy. Explore segments by
+                clicking to zoom and hover for details.
+            </p>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="relative group">
+            <div
+                class="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-emerald-500/20 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"
+            >
+            </div>
+            <div
+                class="relative bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-6 h-[1000px]"
+            >
+                <div id="plotly-chart" class="w-full h-full">
+                    <div
+                        class="flex flex-col items-center justify-center h-full gap-4 text-slate-500"
+                    >
+                        <svg
+                            class="animate-spin h-8 w-8 text-blue-500"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                        </svg>
+                        <span
+                            class="font-mono text-sm uppercase tracking-widest"
+                            >Loading Analytics Engine...</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div
+                class="p-6 rounded-xl bg-zinc-900/40 border border-zinc-800/50 space-y-2"
+            >
+                <div class="text-blue-400 font-mono text-xs uppercase">
+                    Interactive Zoom
+                </div>
+                <p class="text-sm text-slate-400">
+                    Click on any segment to zoom in and focus on that specific
+                    branch of the hierarchy.
+                </p>
+            </div>
+            <div
+                class="p-6 rounded-xl bg-zinc-900/40 border border-zinc-800/50 space-y-2"
+            >
+                <div class="text-emerald-400 font-mono text-xs uppercase">
+                    Real-time Metrics
+                </div>
+                <p class="text-sm text-slate-400">
+                    Aggregated values are recalculated automatically to show
+                    market share and totals.
+                </p>
+            </div>
+            <div
+                class="p-6 rounded-xl bg-zinc-900/40 border border-zinc-800/50 space-y-2"
+            >
+                <div class="text-purple-400 font-mono text-xs uppercase">
+                    Dual Perspective
+                </div>
+                <p class="text-sm text-slate-400">
+                    Inner rings represent Customers, transitioning to Suppliers
+                    and finally Makers in the outer rim.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script is:inline define:vars={{ salesData }}>
+        // Passing data via define:vars which Astro handles automatically
+        import("https://esm.sh/plotly.js-dist-min@2.35.2")
+            .then(({ default: Plotly }) => {
+                const chartDiv = document.getElementById("plotly-chart");
+
+                const sales = salesData.map((row) => ({
+                    customer: row.Customer,
+                    supplier: row.Supplier,
+                    maker: row.Maker,
+                    value: Number(row.Value) || 0,
+                }));
+
+                // Aggregation Logic
+                const customers = {};
+                let totalSales = 0;
+
+                sales.forEach(({ customer, supplier, maker, value }) => {
+                    totalSales += value;
+                    if (!customers[customer])
+                        customers[customer] = { total: 0, suppliers: {} };
+                    customers[customer].total += value;
+
+                    if (!customers[customer].suppliers[supplier])
+                        customers[customer].suppliers[supplier] = {
+                            total: 0,
+                            makers: {},
+                        };
+                    customers[customer].suppliers[supplier].total += value;
+
+                    if (!customers[customer].suppliers[supplier].makers[maker])
+                        customers[customer].suppliers[supplier].makers[maker] =
+                            0;
+                    customers[customer].suppliers[supplier].makers[maker] +=
+                        value;
+                });
+
+                // Hierarchy Creation
+                const ids = [];
+                const labels = [];
+                const parents = [];
+                const values = [];
+                const percentages = [];
+
+                // root
+                ids.push("root");
+                labels.push(
+                    `TOTAL SALES<br><b>${totalSales.toLocaleString()} PLN</b>`,
+                );
+                parents.push("");
+                values.push(totalSales);
+                percentages.push(100);
+
+                Object.entries(customers).forEach(([cust, cdata]) => {
+                    const custId = `cust::${cust}`;
+                    ids.push(custId);
+                    labels.push(cust);
+                    parents.push("root");
+                    values.push(cdata.total);
+                    percentages.push(
+                        Number(((cdata.total / totalSales) * 100).toFixed(1)),
+                    );
+
+                    Object.entries(cdata.suppliers).forEach(([supp, sdata]) => {
+                        const suppId = `cust::${cust}||supp::${supp}`;
+                        ids.push(suppId);
+                        labels.push(supp);
+                        parents.push(custId);
+                        values.push(sdata.total);
+                        percentages.push(
+                            Number(
+                                ((sdata.total / totalSales) * 100).toFixed(1),
+                            ),
+                        );
+
+                        Object.entries(sdata.makers).forEach(([maker, val]) => {
+                            const makerId = `cust::${cust}||supp::${supp}||maker::${maker}`;
+                            ids.push(makerId);
+                            labels.push(maker);
+                            parents.push(suppId);
+                            values.push(val);
+                            percentages.push(
+                                Number(((val / totalSales) * 100).toFixed(2)),
+                            );
+                        });
+                    });
+                });
+
+                const plotData = [
+                    {
+                        type: "sunburst",
+                        ids,
+                        labels,
+                        parents,
+                        values,
+                        branchvalues: "total",
+                        insidetextorientation: "radial",
+                        customdata: percentages,
+                        marker: {
+                            line: { width: 1, color: "rgba(24, 24, 27, 0.4)" },
+                        },
+                        hovertemplate:
+                            "<b>%{label}</b><br>" +
+                            "Sales: %{value:,.0f} PLN<br>" +
+                            "Share: %{customdata}%<extra></extra>",
+                    },
+                ];
+
+                const layout = {
+                    paper_bgcolor: "rgba(0,0,0,0)",
+                    plot_bgcolor: "rgba(0,0,0,0)",
+                    margin: { l: 0, r: 0, b: 0, t: 0 },
+                    font: {
+                        family: "JetBrains Mono, monospace",
+                        color: "#94a3b8",
+                    },
+                    sunburstcolorway: [
+                        "#3b82f6", // Blue 500
+                        "#10b981", // Emerald 500
+                        "#f59e0b", // Amber 500
+                        "#ef4444", // Red 500
+                        "#8b5cf6", // Violet 500
+                        "#ec4899", // Pink 500
+                        "#06b6d4", // Cyan 500
+                    ],
+                    extendsunburstcolorway: true,
+                };
+
+                const config = { displayModeBar: false, responsive: true };
+
+                function draw() {
+                    const width = chartDiv.clientWidth;
+                    const height = chartDiv.clientHeight;
+
+                    const layoutSized = {
+                        ...layout,
+                        width: Math.floor(width),
+                        height: Math.floor(height),
+                    };
+                    Plotly.react(chartDiv, plotData, layoutSized, config);
+                }
+
+                // Initial cleanup and draw
+                chartDiv.innerHTML = "";
+                draw();
+
+                if (typeof ResizeObserver !== "undefined") {
+                    new ResizeObserver(draw).observe(chartDiv);
+                } else {
+                    window.addEventListener("resize", draw);
+                }
+            })
+            .catch((err) => {
+                chartDiv.innerHTML = `<span class="text-red-400 font-mono">Failed to load Plotly Engine: ${err.message}</span>`;
+            });
+    </script>
+</Layout>
+
+<style is:global>
+    /* Styling the Plotly SVG internally if needed */
+    .js-plotly-plot .plotly .cursor-pointer {
+        cursor: crosshair !important;
+    }
+    .sunburst-viz .slicetext {
+        font-weight: 500 !important;
+        letter-spacing: -0.025em !important;
+    }
+</style>

@@ -1,0 +1,56 @@
+[
+    {
+        "Customer": "Customer A",
+        "Supplier": "Precision Tools Ltd",
+        "Maker": "Ulmer Gmbh",
+        "Value": 45000
+    },
+    {
+        "Customer": "Customer A",
+        "Supplier": "Precision Tools Ltd",
+        "Maker": "Scorpio Tech",
+        "Value": 12000
+    },
+    {
+        "Customer": "Customer A",
+        "Supplier": "Global Milling",
+        "Maker": "Milling Master",
+        "Value": 8000
+    },
+    {
+        "Customer": "Customer B",
+        "Supplier": "Precision Tools Ltd",
+        "Maker": "Ulmer Gmbh",
+        "Value": 25000
+    },
+    {
+        "Customer": "Customer B",
+        "Supplier": "Industrial Supplies",
+        "Maker": "Heavy Forge",
+        "Value": 35000
+    },
+    {
+        "Customer": "Customer B",
+        "Supplier": "Industrial Supplies",
+        "Maker": "Steel Wave",
+        "Value": 15000
+    },
+    {
+        "Customer": "Customer C",
+        "Supplier": "Global Milling",
+        "Maker": "Milling Master",
+        "Value": 22000
+    },
+    {
+        "Customer": "Customer C",
+        "Supplier": "Precision Tools Ltd",
+        "Maker": "Scorpio Tech",
+        "Value": 18000
+    },
+    {
+        "Customer": "Customer D",
+        "Supplier": "In-House",
+        "Maker": "Craftsman",
+        "Value": 5000
+    }
+]
