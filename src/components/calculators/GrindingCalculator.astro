@@ -1,0 +1,370 @@
+---
+// UlmerCalculator.astro
+import CalcCard from "../CalcCard.astro";
+import CalcInput from "../CalcInput.astro";
+import CalcOutput from "../CalcOutput.astro";
+---
+
+<CalcCard title="Ulmer Grinding Parameters">
+    <div class="space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Wheel Section (Ściernica) -->
+            <div
+                class="space-y-4 p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/50"
+            >
+                <h3
+                    class="text-sm font-bold text-blue-400 uppercase tracking-widest flex items-center gap-2"
+                >
+                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"
+                    ></span>
+                    Grinding Wheel (Ściernica)
+                </h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <CalcInput
+                        id="wheel_d"
+                        label="Diameter"
+                        unit="mm"
+                        value="350"
+                    />
+                    <CalcInput
+                        id="wheel_width"
+                        label="Width"
+                        unit="mm"
+                        value="5"
+                    />
+                    <CalcInput
+                        id="wheel_speed"
+                        label="Speed Vc"
+                        unit="m/s"
+                        value="95.3"
+                        step="0.1"
+                    />
+                    <CalcInput
+                        id="wheel_rpm"
+                        label="Speed n"
+                        unit="RPM"
+                        value="5200"
+                    />
+
+                    <div class="space-y-1">
+                        <label for="wheel_dir" class="calc-label"
+                            >Rotation Direction</label
+                        >
+                        <select
+                            id="wheel_dir"
+                            class="calc-input bg-zinc-950 border-zinc-800 text-slate-200 w-full rounded-lg py-2 px-3 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none"
+                        >
+                            <option value="LEWY" selected>LEWY (Left)</option>
+                            <option value="PRAWY">PRAWY (Right)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Material Section (Materiał) -->
+            <div
+                class="space-y-4 p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/50"
+            >
+                <h3
+                    class="text-sm font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-2"
+                >
+                    <span
+                        class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"
+                    ></span>
+                    Workpiece (Materiał)
+                </h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <CalcInput
+                        id="material_d"
+                        label="Diameter"
+                        unit="mm"
+                        value="10"
+                    />
+                    <CalcInput
+                        id="material_speed"
+                        label="Speed Vw"
+                        unit="m/s"
+                        value="0.43"
+                        step="0.01"
+                    />
+                    <div class="relative">
+                        <CalcInput
+                            id="material_rpm"
+                            label="Speed n"
+                            unit="RPM"
+                            value="823"
+                        />
+                        <div
+                            id="prime_indicator"
+                            class="hidden absolute -top-1 right-0 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded border border-emerald-400/20 uppercase tracking-tighter"
+                        >
+                            PRIME
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label for="material_dir" class="calc-label"
+                            >Rotation Direction</label
+                        >
+                        <select
+                            id="material_dir"
+                            class="calc-input bg-zinc-950 border-zinc-800 text-slate-200 w-full rounded-lg py-2 px-3 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none"
+                        >
+                            <option value="LEWY">LEWY (Left)</option>
+                            <option value="PRAWY" selected>PRAWY (Right)</option
+                            >
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Process Parameters -->
+        <div class="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/50">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <CalcInput
+                    id="traverse_feed"
+                    label="Traverse Feed"
+                    unit="mm/min"
+                    value="50"
+                />
+                <div
+                    class="flex flex-col items-center justify-center p-4 bg-zinc-950/50 rounded-lg border border-zinc-800/30"
+                >
+                    <div
+                        id="grinding_type"
+                        class="text-lg font-bold text-white mb-1"
+                    >
+                        Checking...
+                    </div>
+                    <div
+                        class="text-xs text-slate-500 uppercase tracking-widest font-mono"
+                    >
+                        Grinding Type
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculation Results -->
+        <div class="pt-6 border-t border-zinc-800/30">
+            <div
+                class="text-xs font-mono text-blue-400 uppercase tracking-wider mb-6 flex items-center gap-4"
+            >
+                <span>Performance Analysis</span>
+                <div
+                    class="h-px flex-1 bg-gradient-to-r from-blue-500/30 to-transparent"
+                >
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="space-y-2">
+                    <CalcOutput
+                        id="speed_ratio"
+                        label="Speed Ratio (qs)"
+                        value="-"
+                    />
+                    <p class="text-[10px] text-zinc-500 italic">
+                        Target: 200 ~ 280
+                    </p>
+                </div>
+                <CalcOutput id="rpm_ratio" label="RPM Ratio" value="-" />
+                <div class="space-y-2">
+                    <CalcOutput id="ud_factor" label="Overlap (Ud)" value="-" />
+                    <p class="text-[10px] text-zinc-500 italic">
+                        Target: 70 ~ 130
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</CalcCard>
+
+<script>
+    const wheel_d = document.getElementById("wheel_d") as HTMLInputElement;
+    const wheel_width = document.getElementById(
+        "wheel_width",
+    ) as HTMLInputElement;
+    const wheel_speed = document.getElementById(
+        "wheel_speed",
+    ) as HTMLInputElement;
+    const wheel_rpm = document.getElementById("wheel_rpm") as HTMLInputElement;
+    const wheel_dir = document.getElementById("wheel_dir") as HTMLSelectElement;
+
+    const material_d = document.getElementById(
+        "material_d",
+    ) as HTMLInputElement;
+    const material_speed = document.getElementById(
+        "material_speed",
+    ) as HTMLInputElement;
+    const material_rpm = document.getElementById(
+        "material_rpm",
+    ) as HTMLInputElement;
+    const material_dir = document.getElementById(
+        "material_dir",
+    ) as HTMLSelectElement;
+    const prime_indicator = document.getElementById("prime_indicator");
+
+    const traverse_feed = document.getElementById(
+        "traverse_feed",
+    ) as HTMLInputElement;
+
+    const grinding_type = document.getElementById("grinding_type");
+    const speed_ratio = document.getElementById("speed_ratio");
+    const rpm_ratio = document.getElementById("rpm_ratio");
+    const ud_factor = document.getElementById("ud_factor");
+
+    function num(el: HTMLInputElement) {
+        return parseFloat(el?.value) || 0;
+    }
+
+    function isPrime(num: number) {
+        if (num <= 1) return false;
+        for (let i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i === 0) return false;
+        }
+        return true;
+    }
+
+    function syncWheel(source: string) {
+        const d = num(wheel_d);
+        const rpm = num(wheel_rpm);
+        const speed = num(wheel_speed);
+
+        if (d === 0) return;
+
+        if (source === "rpm" || source === "d") {
+            const v = (d * Math.PI * rpm) / (60 * 1000);
+            wheel_speed.value = v.toFixed(1);
+        } else if (source === "speed") {
+            const n = (speed * 60 * 1000) / (d * Math.PI);
+            wheel_rpm.value = n.toFixed(0);
+        }
+    }
+
+    function syncMaterial(source: string) {
+        const d = num(material_d);
+        const rpm = num(material_rpm);
+        const speed = num(material_speed);
+
+        if (d === 0) return;
+
+        if (source === "rpm" || source === "d") {
+            const v = (d * Math.PI * rpm) / (60 * 1000);
+            material_speed.value = v.toFixed(2);
+        } else if (source === "speed") {
+            const n = (speed * 60 * 1000) / (d * Math.PI);
+            material_rpm.value = n.toFixed(0);
+        }
+
+        // Prime check
+        const nVal = num(material_rpm);
+        if (isPrime(nVal)) {
+            material_rpm.classList.add("text-emerald-400", "font-bold");
+            prime_indicator?.classList.remove("hidden");
+        } else {
+            material_rpm.classList.remove("text-emerald-400", "font-bold");
+            prime_indicator?.classList.add("hidden");
+        }
+    }
+
+    function calculateResults() {
+        const vWheel = num(wheel_speed);
+        const vMat = num(material_speed);
+        const nWheel = num(wheel_rpm);
+        const nMat = num(material_rpm);
+        const width = num(wheel_width);
+        const feed = num(traverse_feed);
+
+        // Speed Ratio
+        if (speed_ratio) {
+            if (vMat !== 0) {
+                const qs = vWheel / vMat;
+                speed_ratio.textContent = qs.toFixed(2);
+                speed_ratio.classList.toggle(
+                    "text-emerald-400",
+                    qs >= 200 && qs <= 280,
+                );
+            } else {
+                speed_ratio.textContent = "-";
+            }
+        }
+
+        // RPM Ratio
+        if (rpm_ratio) {
+            if (nMat !== 0) {
+                rpm_ratio.textContent = (nWheel / nMat).toFixed(2);
+            } else {
+                rpm_ratio.textContent = "-";
+            }
+        }
+
+        // Overlap Ud
+        if (ud_factor) {
+            if (feed !== 0) {
+                const ud = (nMat * width) / feed;
+                ud_factor.textContent = ud.toFixed(2);
+                ud_factor.classList.toggle(
+                    "text-emerald-400",
+                    ud >= 70 && ud <= 130,
+                );
+            } else {
+                ud_factor.textContent = "-";
+            }
+        }
+
+        // Grinding type
+        if (grinding_type) {
+            const wDir = wheel_dir.value;
+            const mDir = material_dir.value;
+
+            if (wDir === mDir) {
+                grinding_type.textContent = "Współbieżne";
+                grinding_type.className =
+                    "text-lg font-bold text-blue-400 mb-1";
+            } else {
+                grinding_type.textContent = "Przeciwbieżne";
+                grinding_type.className =
+                    "text-lg font-bold text-amber-400 mb-1";
+            }
+        }
+    }
+
+    // Event Listeners
+    wheel_rpm.addEventListener("input", () => {
+        syncWheel("rpm");
+        calculateResults();
+    });
+    wheel_speed.addEventListener("input", () => {
+        syncWheel("speed");
+        calculateResults();
+    });
+    wheel_d.addEventListener("input", () => {
+        syncWheel("d");
+        calculateResults();
+    });
+    wheel_dir.addEventListener("change", calculateResults);
+
+    material_rpm.addEventListener("input", () => {
+        syncMaterial("rpm");
+        calculateResults();
+    });
+    material_speed.addEventListener("input", () => {
+        syncMaterial("speed");
+        calculateResults();
+    });
+    material_d.addEventListener("input", () => {
+        syncMaterial("d");
+        calculateResults();
+    });
+    material_dir.addEventListener("change", calculateResults);
+
+    wheel_width.addEventListener("input", calculateResults);
+    traverse_feed.addEventListener("input", calculateResults);
+
+    // Initial calculation
+    syncWheel("rpm");
+    syncMaterial("rpm");
+    calculateResults();
+</script>
