@@ -22,7 +22,7 @@ const items = await Promise.all(
 <section class="calc-card p-0" aria-label="Calculator tools">
   {
     items.map((item, index) => (
-      <details class="group border-b border-zinc-800 last:border-b-0">
+      <details class="group border-b border-zinc-800 last:border-b-0 ">
         <summary class="py-6 px-4 flex items-center justify-between cursor-pointer transition-colors hover:bg-zinc-900/60 group-open:bg-zinc-800 focus:outline-none">
           <span class="text-lg font-bold tracking-tight transition-colors text-slate-100 group-hover:text-white group-open:text-brand-blue">
             {item.title}
@@ -42,7 +42,7 @@ const items = await Promise.all(
             />
           </svg>
         </summary>
-        <div class="px-4 pb-8 border-t border-zinc-800/30">
+        <div class="px-4 pb-4 border-t border-zinc-800/30 pt-2 bg-gray-100">
           <item.component />
         </div>
       </details>
