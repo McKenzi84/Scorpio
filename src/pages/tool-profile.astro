@@ -7,7 +7,7 @@ import Layout from "../layouts/Layout.astro";
     description="Professional tool geometry generator with horizontal spec dashboard and accordion-based diameter management."
 >
     <div
-        class="max-w-[1600px] mx-auto py-6 px-4 h-screen flex flex-col gap-6 overflow-hidden"
+        class="max-w-[1600px] mx-auto py-6 px-4 min-h-screen flex flex-col gap-6 lg:h-screen lg:overflow-hidden"
     >
         <!-- Dashboard Top Bar: Global Specs -->
         <div
@@ -22,7 +22,7 @@ import Layout from "../layouts/Layout.astro";
                     <p
                         class="text-[10px] text-zinc-500 font-mono uppercase tracking-widest"
                     >
-                        v3.0 Dashboard
+                        Dashboard
                     </p>
                 </div>
 
@@ -138,10 +138,12 @@ import Layout from "../layouts/Layout.astro";
             </div>
         </div>
 
-        <div class="flex-1 flex gap-6 min-h-0">
+        <div class="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
             <!-- Left Sidebar: Diameter Accordions & Export -->
-            <div class="w-80 flex flex-col gap-4">
-                <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+            <div class="contents lg:flex lg:flex-col lg:w-80 lg:gap-4">
+                <div
+                    class="flex-1 overflow-y-auto pr-2 custom-scrollbar order-1 lg:order-none"
+                >
                     <h2
                         class="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] mb-3 px-2"
                     >
@@ -155,7 +157,7 @@ import Layout from "../layouts/Layout.astro";
 
                 <!-- Export & Meta Panel -->
                 <div
-                    class="bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-4 shadow-xl"
+                    class="bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-4 shadow-xl order-3 lg:order-none"
                 >
                     <button
                         id="export-image"
@@ -192,9 +194,11 @@ import Layout from "../layouts/Layout.astro";
             </div>
 
             <!-- Main Content: Integrated Graph -->
-            <div class="flex-1 flex flex-col gap-4 overflow-hidden">
+            <div
+                class="flex-1 flex flex-col gap-4 min-h-0 order-2 lg:order-none"
+            >
                 <div
-                    class="flex-1 bg-zinc-900/30 border border-zinc-800/50 rounded-3xl overflow-hidden relative shadow-inner"
+                    class="h-[300px] lg:h-full lg:flex-1 bg-zinc-900/30 border border-zinc-800/50 rounded-3xl overflow-hidden relative shadow-inner"
                 >
                     <div id="plotly-graph" class="w-full h-full">
                         <div
@@ -297,7 +301,7 @@ import Layout from "../layouts/Layout.astro";
                                 <div class="grid grid-cols-2 gap-3">
                                     <div class="space-y-1">
                                         <label class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">ø Dimension (mm)</label>
-                                        <input type="number" id="d${i}" value="${Math.max(2, 12 - i * 2)}" min="0.1" max="50" step="0.1" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-blue-500 transition-colors val-input" />
+                                        <input type="number" id="d${i}" value="${8 + i * 2}" min="0.1" max="50" step="0.1" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-blue-500 transition-colors val-input" />
                                     </div>
                                     <div class="space-y-1">
                                         <label class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">Length (mm)</label>
@@ -492,6 +496,13 @@ import Layout from "../layouts/Layout.astro";
                     ]; // Blue, Cyan, Emerald, Amber, Rose
 
                     let data = [];
+                    let annotations = [];
+                    let shapes = [];
+
+                    const maxHalfD = Math.max(
+                        ...segments.flatMap((seg) => seg.map((p) => p[1])),
+                        params.shank_d / 2,
+                    );
 
                     // Add diameter segments
                     segments.forEach((pts, idx) => {
@@ -548,16 +559,20 @@ import Layout from "../layouts/Layout.astro";
                             margin: { l: 40, r: 40, b: 40, t: 40 },
                             xaxis: {
                                 gridcolor: "#1f2937",
+                                zeroline: false,
+                                showgrid: false, // Grid removed
                                 title: {
                                     text: "Length (mm)",
-                                    font: { size: 10 },
+                                    font: { size: 9 },
                                 },
                             },
                             yaxis: {
                                 gridcolor: "#1f2937",
                                 scaleanchor: "x",
                                 scaleratio: 1,
-                                title: { text: "ø (mm)", font: { size: 10 } },
+                                zeroline: false,
+                                showgrid: false, // Grid removed
+                                title: { text: "ø (mm)", font: { size: 9 } },
                             },
                         },
                         { responsive: true, displayModeBar: false },
