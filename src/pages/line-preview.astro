@@ -1,0 +1,605 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+    title="Tool Designer | Dashboard"
+    description="Professional tool geometry generator with horizontal spec dashboard and accordion-based diameter management."
+>
+    <div
+        class="max-w-[1600px] mx-auto py-6 px-4 h-screen flex flex-col gap-6 overflow-hidden"
+    >
+        <!-- Dashboard Top Bar: Global Specs -->
+        <div
+            class="bg-zinc-900/80 border border-zinc-800/50 rounded-2xl p-4 shadow-2xl backdrop-blur-md"
+        >
+            <div class="flex flex-wrap items-end gap-6">
+                <!-- Brand/Logo -->
+                <div class="pr-6 border-r border-zinc-800 hidden xl:block">
+                    <h1 class="text-xl font-bold text-white tracking-tight">
+                        Tool <span class="text-blue-500">Designer</span>
+                    </h1>
+                    <p
+                        class="text-[10px] text-zinc-500 font-mono uppercase tracking-widest"
+                    >
+                        v3.0 Dashboard
+                    </p>
+                </div>
+
+                <!-- Global Inputs -->
+                <div class="flex flex-1 flex-wrap gap-4 items-end">
+                    <div class="space-y-1.5 min-w-[140px]">
+                        <label
+                            class="text-[10px] font-mono text-zinc-500 uppercase flex items-center gap-2"
+                        >
+                            <svg
+                                class="w-3 h-3 text-blue-500"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                ><circle cx="12" cy="12" r="10"
+                                ></circle><polyline points="12 6 12 12 16 14"
+                                ></polyline></svg
+                            >
+                            # Diameters
+                        </label>
+                        <select
+                            id="s_steps"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                        >
+                            <option value="1">1 Diameter</option>
+                            <option value="2">2 Diameters</option>
+                            <option value="3">3 Diameters</option>
+                            <option value="4">4 Diameters</option>
+                            <option value="5">5 Diameters</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-1.5 min-w-[100px]">
+                        <label
+                            class="text-[10px] font-mono text-zinc-500 uppercase flex items-center gap-2"
+                        >
+                            <svg
+                                class="w-3 h-3 text-red-400"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="3"
+                                ><polyline points="20 12 20 22 4 22 4 12"
+                                ></polyline><path d="M20 7L12 3 4 7"
+                                ></path></svg
+                            >
+                            Point Angle (°)
+                        </label>
+                        <input
+                            type="number"
+                            id="point_angle"
+                            value="140"
+                            min="60"
+                            max="180"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                        />
+                    </div>
+
+                    <div class="space-y-1.5 min-w-[100px]">
+                        <label
+                            class="text-[10px] font-mono text-zinc-500 uppercase"
+                            >OAL (Full Length)</label
+                        >
+                        <input
+                            type="number"
+                            id="oal"
+                            value="100"
+                            min="30"
+                            max="250"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                        />
+                    </div>
+
+                    <div class="space-y-1.5 min-w-[100px]">
+                        <label
+                            class="text-[10px] font-mono text-zinc-500 uppercase"
+                            >Shank ø</label
+                        >
+                        <input
+                            type="number"
+                            id="shank_d"
+                            value="12"
+                            min="3"
+                            max="35"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                        />
+                    </div>
+
+                    <div class="space-y-1.5 min-w-[100px]">
+                        <label
+                            class="text-[10px] font-mono text-zinc-500 uppercase"
+                            >Back Chamfer</label
+                        >
+                        <input
+                            type="number"
+                            id="back_chamfer"
+                            value="1"
+                            step="0.1"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                        />
+                    </div>
+
+                    <div class="flex-1 min-w-[150px] flex justify-end pb-0.5">
+                        <div
+                            id="validation-msg"
+                            class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full"
+                        >
+                            Status: System OK
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 flex gap-6 min-h-0">
+            <!-- Left Sidebar: Diameter Accordions & Export -->
+            <div class="w-80 flex flex-col gap-4">
+                <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                    <h2
+                        class="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] mb-3 px-2"
+                    >
+                        Manage Diameters
+                    </h2>
+                    <!-- Accordion Container -->
+                    <div id="accordion-container" class="space-y-2">
+                        <!-- JS injections -->
+                    </div>
+                </div>
+
+                <!-- Export & Meta Panel -->
+                <div
+                    class="bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-4 shadow-xl"
+                >
+                    <button
+                        id="export-image"
+                        class="w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-3 rounded-xl text-xs font-bold transition-all shadow-lg flex items-center justify-center gap-2 group"
+                    >
+                        <svg
+                            class="w-4 h-4 group-hover:scale-110 transition-transform"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            ><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                            ></path><polyline points="7 10 12 15 17 10"
+                            ></polyline><line x1="12" y1="15" x2="12" y2="3"
+                            ></line></svg
+                        >
+                        Export Technical SVG
+                    </button>
+                    <div class="mt-4 flex flex-col gap-2">
+                        <div
+                            class="flex items-center justify-between text-[10px] text-zinc-500 font-mono"
+                        >
+                            <span>Format:</span>
+                            <span class="text-zinc-300">Vector SVG</span>
+                        </div>
+                        <div
+                            class="flex items-center justify-between text-[10px] text-zinc-500 font-mono"
+                        >
+                            <span>Scale:</span>
+                            <span class="text-zinc-300">1 : 1 Physical</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content: Integrated Graph -->
+            <div class="flex-1 flex flex-col gap-4 overflow-hidden">
+                <div
+                    class="flex-1 bg-zinc-900/30 border border-zinc-800/50 rounded-3xl overflow-hidden relative shadow-inner"
+                >
+                    <div id="plotly-graph" class="w-full h-full">
+                        <div
+                            class="flex items-center justify-center h-full text-zinc-700 font-mono tracking-widest animate-pulse"
+                        >
+                            BUILDING GEOMETRY...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legend Bar -->
+                <div
+                    class="flex items-center gap-6 justify-center py-2 px-6 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl"
+                >
+                    <div class="flex items-center gap-2">
+                        <div class="flex -space-x-1">
+                            <div
+                                class="w-2.5 h-2.5 rounded-full bg-blue-500 border border-zinc-900 shadow-[0_0_8px_rgba(59,130,246,0.3)]"
+                            >
+                            </div>
+                            <div
+                                class="w-2.5 h-2.5 rounded-full bg-cyan-500 border border-zinc-900 shadow-[0_0_8px_rgba(6,182,212,0.3)]"
+                            >
+                            </div>
+                            <div
+                                class="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-zinc-900 shadow-[0_0_8px_rgba(16,185,129,0.3)]"
+                            >
+                            </div>
+                        </div>
+                        <span
+                            class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest"
+                            >Segment Breakdown</span
+                        >
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]"
+                        >
+                        </div>
+                        <span
+                            class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest"
+                            >Shank</span
+                        >
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-[1px] bg-red-500/50 dash-dot"></div>
+                        <span
+                            class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest"
+                            >Center line</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script is:inline>
+        // Main logic
+        import("https://esm.sh/plotly.js-dist-min@2.35.2")
+            .then(({ default: Plotly }) => {
+                const graphDiv = document.getElementById("plotly-graph");
+                const stepsInput = document.getElementById("s_steps");
+                const accordionContainer = document.getElementById(
+                    "accordion-container",
+                );
+                const validationMsg = document.getElementById("validation-msg");
+                const exportBtn = document.getElementById("export-image");
+
+                function createAccordions() {
+                    const steps = parseInt(stepsInput.value);
+                    const colors = [
+                        "#3b82f6",
+                        "#06b6d4",
+                        "#10b981",
+                        "#f59e0b",
+                        "#f43f5e",
+                    ]; // Blue, Cyan, Emerald, Amber, Rose
+                    accordionContainer.innerHTML = "";
+
+                    for (let i = 1; i <= steps; i++) {
+                        const color = colors[(i - 1) % colors.length];
+                        const diameter = document.createElement("div");
+                        diameter.className =
+                            "bg-zinc-900/50 border border-zinc-800/80 rounded-xl overflow-hidden group";
+                        diameter.innerHTML = `
+                            <button class="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-zinc-800/30 transition-all accordion-btn" data-target="d${i}-content">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 rounded-lg bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-400 group-hover:bg-zinc-700 transition-colors relative">
+                                        ${i}
+                                        <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-zinc-900" style="background-color: ${color}"></div>
+                                    </div>
+                                    <div>
+                                        <p class="text-[11px] font-bold text-zinc-300 uppercase leading-none">Diameter ${i}</p>
+                                        <p class="text-[10px] text-zinc-500 font-mono mt-1" id="d${i}-summary">ø 10.0mm • L 15.0mm</p>
+                                    </div>
+                                </div>
+                                <svg class="w-4 h-4 text-zinc-600 transition-transform duration-300 transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </button>
+                            <div id="d${i}-content" class="hidden px-4 pb-4 pt-1 space-y-3 bg-zinc-950/20">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">ø Dimension (mm)</label>
+                                        <input type="number" id="d${i}" value="${Math.max(2, 12 - i * 2)}" min="0.1" max="50" step="0.1" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-blue-500 transition-colors val-input" />
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">Length (mm)</label>
+                                        <input type="number" id="d${i}_l" value="${15 + i * 10}" step="0.1" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-blue-500 transition-colors val-input" />
+                                    </div>
+                                </div>
+                                ${
+                                    i < steps
+                                        ? `
+                                    <div class="space-y-1">
+                                        <label class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">Step Angle (°)</label>
+                                        <input type="number" id="step_${i}_angle" value="90" min="30" max="180" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-blue-500 transition-colors val-input" />
+                                    </div>
+                                `
+                                        : ""
+                                }
+                            </div>
+                        `;
+                        accordionContainer.appendChild(diameter);
+                    }
+
+                    // Auto-expand first diameter
+                    if (steps > 0) {
+                        const firstContent =
+                            document.getElementById("d1-content");
+                        const firstBtn =
+                            accordionContainer.querySelector(".accordion-btn");
+                        firstContent.classList.toggle("hidden");
+                        firstBtn
+                            .querySelector("svg")
+                            .classList.toggle("rotate-180");
+                    }
+
+                    // Setup Accordion Toggles
+                    document
+                        .querySelectorAll(".accordion-btn")
+                        .forEach((btn) => {
+                            btn.addEventListener("click", () => {
+                                const targetId =
+                                    btn.getAttribute("data-target");
+                                const content =
+                                    document.getElementById(targetId);
+                                const svg = btn.querySelector("svg");
+                                content.classList.toggle("hidden");
+                                svg.classList.toggle("rotate-180");
+                            });
+                        });
+
+                    // Reactivity
+                    document.querySelectorAll("input, select").forEach((el) => {
+                        el.addEventListener("input", (e) => {
+                            updateSummaries();
+                            updateGraph();
+                        });
+                    });
+
+                    updateSummaries();
+                    updateGraph();
+                }
+
+                function updateSummaries() {
+                    const steps = parseInt(stepsInput.value);
+                    for (let i = 1; i <= steps; i++) {
+                        const d = document.getElementById(`d${i}`).value;
+                        const l = document.getElementById(`d${i}_l`).value;
+                        const summary = document.getElementById(
+                            `d${i}-summary`,
+                        );
+                        if (summary) summary.innerText = `ø ${d}mm • L ${l}mm`;
+                    }
+                }
+
+                function calculatePoints(params) {
+                    const {
+                        d1,
+                        d1_l,
+                        s_steps,
+                        shank_d,
+                        oal,
+                        point_angle,
+                        back_chamfer,
+                    } = params;
+                    const tip_x =
+                        -Math.round(
+                            Math.tan(
+                                ((180 - point_angle) / 2) * (Math.PI / 180),
+                            ) *
+                                (d1 / 2) *
+                                1000,
+                        ) / 1000;
+
+                    let segments = [];
+                    // Segment 1: Tip to first length
+                    segments.push([
+                        [tip_x, 0],
+                        [0, d1 / 2],
+                        [d1_l, d1 / 2],
+                    ]);
+
+                    for (let i = 1; i < s_steps; i++) {
+                        const curD = params[`d${i}`];
+                        const nextD = params[`d${i + 1}`];
+                        const angle = params[`step_${i}_angle`];
+                        const curL = params[`d${i}_l`];
+                        const nextL = params[`d${i + 1}_l`];
+                        const step_len =
+                            Math.round(
+                                ((Math.tan(
+                                    ((180 - angle) / 2) * (Math.PI / 180),
+                                ) *
+                                    (nextD - curD)) /
+                                    2) *
+                                    1000,
+                            ) / 1000;
+
+                        // Add transition and next diameter as a segment
+                        segments.push([
+                            [curL, curD / 2],
+                            [curL + step_len, nextD / 2],
+                            [nextL, nextD / 2],
+                        ]);
+                    }
+
+                    const last_segment = segments[segments.length - 1];
+                    const last_point = last_segment[last_segment.length - 1];
+
+                    let shank = [
+                        [last_point[0], last_point[1]], // Connection point from last segment
+                        [last_point[0], shank_d / 2], // Step to shank diameter
+                        [oal - back_chamfer, shank_d / 2],
+                        [oal, shank_d / 2 - back_chamfer],
+                        [oal, 0],
+                    ];
+                    return { segments, shank };
+                }
+
+                function updateGraph() {
+                    const s_steps = parseInt(stepsInput.value);
+                    const params = {
+                        s_steps,
+                        point_angle: parseFloat(
+                            document.getElementById("point_angle").value,
+                        ),
+                        shank_d: parseFloat(
+                            document.getElementById("shank_d").value,
+                        ),
+                        oal: parseFloat(document.getElementById("oal").value),
+                        back_chamfer: parseFloat(
+                            document.getElementById("back_chamfer").value,
+                        ),
+                    };
+
+                    for (let i = 1; i <= s_steps; i++) {
+                        params[`d${i}`] = parseFloat(
+                            document.getElementById(`d${i}`)?.value || 0,
+                        );
+                        params[`d${i}_l`] = parseFloat(
+                            document.getElementById(`d${i}_l`)?.value || 0,
+                        );
+                        if (i < s_steps) {
+                            params[`step_${i}_angle`] = parseFloat(
+                                document.getElementById(`step_${i}_angle`)
+                                    ?.value || 90,
+                            );
+                        }
+                    }
+
+                    const max_l = Math.max(
+                        ...Array.from(
+                            { length: s_steps },
+                            (_, i) => params[`d${i + 1}_l`] || 0,
+                        ),
+                        params.d1_l,
+                    );
+                    if (max_l >= params.oal) {
+                        validationMsg.innerText = "Error: Length exceeds OAL";
+                        validationMsg.className =
+                            "text-[10px] font-mono text-red-400 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-full";
+                        return;
+                    }
+                    validationMsg.innerText = "Status: System OK";
+                    validationMsg.className =
+                        "text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full";
+
+                    const { segments, shank } = calculatePoints(params);
+                    const colors = [
+                        "#3b82f6",
+                        "#06b6d4",
+                        "#10b981",
+                        "#f59e0b",
+                        "#f43f5e",
+                    ]; // Blue, Cyan, Emerald, Amber, Rose
+
+                    let data = [];
+
+                    // Add diameter segments
+                    segments.forEach((pts, idx) => {
+                        const color = colors[idx % colors.length];
+                        data.push({
+                            x: pts.map((p) => p[0]),
+                            y: pts.map((p) => p[1]),
+                            mode: "lines",
+                            name: `D${idx + 1}`,
+                            line: { color, width: 3 },
+                        });
+                        data.push({
+                            x: pts.map((p) => p[0]),
+                            y: pts.map((p) => -p[1]),
+                            mode: "lines",
+                            showlegend: false,
+                            line: { color, width: 3 },
+                        });
+                    });
+
+                    // Add Shank
+                    data.push({
+                        x: shank.map((p) => p[0]),
+                        y: shank.map((p) => p[1]),
+                        mode: "lines",
+                        name: "Shank",
+                        line: { color: "#a855f7", width: 2.5 },
+                    });
+                    data.push({
+                        x: shank.map((p) => p[0]),
+                        y: shank.map((p) => -p[1]),
+                        mode: "lines",
+                        showlegend: false,
+                        line: { color: "#a855f7", width: 2.5 },
+                    });
+
+                    // Add Center Line
+                    data.push({
+                        x: [segments[0][0][0] - 5, params.oal + 5],
+                        y: [0, 0],
+                        mode: "lines",
+                        showlegend: false,
+                        line: { color: "#ef4444", width: 1, dash: "dashdot" },
+                    });
+
+                    Plotly.react(
+                        graphDiv,
+                        data,
+                        {
+                            template: "plotly_dark",
+                            paper_bgcolor: "rgba(0,0,0,0)",
+                            plot_bgcolor: "rgba(0,0,0,0)",
+                            showlegend: false,
+                            margin: { l: 40, r: 40, b: 40, t: 40 },
+                            xaxis: {
+                                gridcolor: "#1f2937",
+                                title: {
+                                    text: "Length (mm)",
+                                    font: { size: 10 },
+                                },
+                            },
+                            yaxis: {
+                                gridcolor: "#1f2937",
+                                scaleanchor: "x",
+                                scaleratio: 1,
+                                title: { text: "ø (mm)", font: { size: 10 } },
+                            },
+                        },
+                        { responsive: true, displayModeBar: false },
+                    );
+                }
+
+                exportBtn.addEventListener("click", () => {
+                    Plotly.downloadImage(graphDiv, {
+                        format: "svg",
+                        width: 1600,
+                        height: 900,
+                        filename: "tool_geometry_dashboard_export",
+                    });
+                });
+
+                stepsInput.addEventListener("change", createAccordions);
+                createAccordions();
+                new ResizeObserver(() => Plotly.Plots.resize(graphDiv)).observe(
+                    graphDiv,
+                );
+            })
+            .catch((err) => {
+                console.error(err);
+                graphDiv.innerHTML = `<div class="p-8 text-red-500 font-mono text-center">Engine Crash: ${err.message}</div>`;
+            });
+    </script>
+</Layout>
+
+<style is:global>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #27272a;
+        border-radius: 10px;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+</style>
