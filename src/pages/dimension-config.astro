@@ -1,0 +1,603 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+    title="Dimension Config | Scorpio Tech"
+    description="Customize the style and placement of dimensions for technical drawings."
+>
+    <div class="max-w-[1200px] mx-auto py-12 px-6 min-h-screen">
+        <div class="flex flex-col md:flex-row gap-12">
+            <!-- Settings Panel -->
+            <div class="flex-1 space-y-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-white tracking-tight">
+                        Dimension <span class="text-blue-500">Settings</span>
+                    </h1>
+                    <p class="text-zinc-400 mt-2 text-sm">
+                        Fine-tune the appearance of diameters and tolerances on
+                        your PDF exports.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- Diameter Settings -->
+                    <section
+                        class="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 space-y-6 shadow-xl"
+                    >
+                        <div
+                            class="flex items-center gap-3 border-b border-zinc-800 pb-4"
+                        >
+                            <div
+                                class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500"
+                            >
+                                <span class="font-bold text-sm">ø</span>
+                            </div>
+                            <h2
+                                class="text-lg font-bold text-white uppercase tracking-wider text-sm"
+                            >
+                                Diameter Value
+                            </h2>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label
+                                    class="text-[10px] font-mono text-zinc-500 uppercase"
+                                    >Font Size (pt)</label
+                                >
+                                <input
+                                    type="range"
+                                    id="diaSize"
+                                    min="4"
+                                    max="14"
+                                    step="0.5"
+                                    value="7"
+                                    class="w-full accent-blue-500"
+                                />
+                                <div
+                                    class="flex justify-between text-[10px] text-zinc-600 font-mono"
+                                >
+                                    <span>4pt</span>
+                                    <span id="diaSizeVal">7pt</span>
+                                    <span>14pt</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="text-[10px] font-mono text-zinc-500 uppercase"
+                                    >Rotation (°)</label
+                                >
+                                <input
+                                    type="range"
+                                    id="diaRot"
+                                    min="0"
+                                    max="360"
+                                    step="90"
+                                    value="90"
+                                    class="w-full accent-blue-500"
+                                />
+                                <div
+                                    class="flex justify-between text-[10px] text-zinc-600 font-mono"
+                                >
+                                    <span>0°</span>
+                                    <span id="diaRotVal">90°</span>
+                                    <span>360°</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="text-[10px] font-mono text-zinc-500 uppercase"
+                                    >Offset X (mm)</label
+                                >
+                                <input
+                                    type="number"
+                                    id="diaOffX"
+                                    value="-1.5"
+                                    step="0.5"
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500 outline-none transition-colors"
+                                />
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Tolerance Settings -->
+                    <section
+                        class="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 space-y-6 shadow-xl"
+                    >
+                        <div
+                            class="flex items-center gap-3 border-b border-zinc-800 pb-4"
+                        >
+                            <div
+                                class="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400"
+                            >
+                                <span class="font-bold text-xs">±</span>
+                            </div>
+                            <h2
+                                class="text-lg font-bold text-white uppercase tracking-wider text-sm"
+                            >
+                                Tolerances
+                            </h2>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label
+                                    class="text-[10px] font-mono text-zinc-500 uppercase"
+                                    >Font Size (pt)</label
+                                >
+                                <input
+                                    type="range"
+                                    id="tolSize"
+                                    min="2"
+                                    max="8"
+                                    step="0.5"
+                                    value="4"
+                                    class="w-full accent-zinc-500"
+                                />
+                                <div
+                                    class="flex justify-between text-[10px] text-zinc-600 font-mono"
+                                >
+                                    <span>2pt</span>
+                                    <span id="tolSizeVal">4pt</span>
+                                    <span>8pt</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="text-[10px] font-mono text-zinc-500 uppercase"
+                                    >Rel. Offset X (mm)</label
+                                >
+                                <input
+                                    type="number"
+                                    id="tolOffX"
+                                    value="3.0"
+                                    step="0.5"
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:border-zinc-500 outline-none transition-colors"
+                                />
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="text-[10px] font-mono text-zinc-500 uppercase"
+                                    >Rel. Offset Y (mm)</label
+                                >
+                                <input
+                                    type="number"
+                                    id="tolOffY"
+                                    value="0.0"
+                                    step="0.5"
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:border-zinc-500 outline-none transition-colors"
+                                />
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="text-[10px] font-mono text-zinc-500 uppercase"
+                                    >Rotation (°)</label
+                                >
+                                <input
+                                    type="range"
+                                    id="tolRot"
+                                    min="0"
+                                    max="360"
+                                    step="90"
+                                    value="90"
+                                    class="w-full accent-zinc-500"
+                                />
+                                <div
+                                    class="flex justify-between text-[10px] text-zinc-600 font-mono"
+                                >
+                                    <span>0°</span>
+                                    <span id="tolRotVal">90°</span>
+                                    <span>360°</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="text-[10px] font-mono text-zinc-500 uppercase"
+                                    >Gap X (mm)</label
+                                >
+                                <input
+                                    type="number"
+                                    id="tolGapX"
+                                    value="0.0"
+                                    step="0.5"
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:border-zinc-500 outline-none transition-colors"
+                                />
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="text-[10px] font-mono text-zinc-500 uppercase"
+                                    >Gap Tolerance (mm)</label
+                                >
+                                <input
+                                    type="number"
+                                    id="tolGap"
+                                    value="4.0"
+                                    step="0.5"
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:border-zinc-500 outline-none transition-colors"
+                                />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="flex gap-4">
+                    <button
+                        id="saveBtn"
+                        class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-500/20 uppercase tracking-widest text-xs"
+                    >
+                        Save Configuration
+                    </button>
+                    <button
+                        id="resetBtn"
+                        class="px-6 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 font-bold py-3 rounded-xl transition-all uppercase tracking-widest text-xs"
+                    >
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="md:w-[400px] h-fit sticky top-12">
+                <div
+                    class="bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl"
+                >
+                    <div
+                        class="p-4 border-b border-zinc-800 flex items-center justify-between"
+                    >
+                        <span
+                            class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest"
+                            >Dimension Preview</span
+                        >
+                    </div>
+                    <div
+                        class="flex-1 min-h-[400px] bg-zinc-950 rounded-xl border border-zinc-800 relative overflow-hidden flex flex-col"
+                    >
+                        <div
+                            class="absolute top-4 left-6 flex items-center gap-2 z-10"
+                        >
+                            <span
+                                class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest"
+                                >Live Preview</span
+                            >
+                        </div>
+                        <!-- Red status dot from user image -->
+                        <div
+                            class="absolute top-4 right-4 w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_12px_rgba(220,38,38,0.7)] z-10"
+                        >
+                        </div>
+
+                        <div
+                            class="flex-1 flex items-center justify-center p-4"
+                        >
+                            <svg
+                                id="preview-svg"
+                                viewBox="0 0 100 100"
+                                class="w-full max-w-[400px] aspect-square drop-shadow-2xl"
+                            >
+                                <!-- Tool Profile Background (mm scale) -->
+                                <path
+                                    d="M 0,50 L 5,45 L 80,45 L 85,50 L 100,50 L 100,50 L 85,50 L 80,55 L 5,55 L 0,50"
+                                    fill="rgba(59,130,246,0.05)"
+                                    stroke="rgba(255,255,255,0.15)"
+                                    stroke-width="0.3"
+                                    stroke-dasharray="1,1"></path>
+
+                                <!-- Horizontal Axis -->
+                                <line
+                                    x1="0"
+                                    y1="50"
+                                    x2="100"
+                                    y2="50"
+                                    stroke="rgba(255,255,255,0.1)"
+                                    stroke-width="0.3"
+                                    <span></line>
+                            </svg>
+                            <div
+                                class="flex-1 min-h-[400px] bg-zinc-950 rounded-xl border border-zinc-800 relative overflow-hidden flex flex-col"
+                            >
+                                <div
+                                    class="absolute top-4 left-6 flex items-center gap-2 z-10"
+                                >
+                                    <span
+                                        class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest"
+                                        >Live Preview</span
+                                    >
+                                </div>
+                                <div
+                                    class="absolute top-4 right-4 w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_12px_rgba(220,38,38,0.7)] z-10"
+                                >
+                                </div>
+
+                                <div
+                                    class="flex-1 flex items-center justify-center p-4"
+                                >
+                                    <svg
+                                        id="preview-svg"
+                                        viewBox="0 0 100 100"
+                                        class="w-full max-w-[400px] aspect-square drop-shadow-2xl"
+                                    >
+                                        <path
+                                            d="M 0,50 L 5,45 L 80,45 L 85,50 L 100,50 L 100,50 L 85,50 L 80,55 L 5,55 L 0,50"
+                                            fill="rgba(59,130,246,0.05)"
+                                            stroke="rgba(255,255,255,0.15)"
+                                            stroke-width="0.3"
+                                            stroke-dasharray="1,1"></path>
+                                        <line
+                                            x1="0"
+                                            y1="50"
+                                            x2="100"
+                                            y2="50"
+                                            stroke="rgba(255,255,255,0.1)"
+                                            stroke-width="0.3"
+                                            stroke-dasharray="2,2"></line>
+                                        <line
+                                            x1="30"
+                                            y1="45"
+                                            x2="45"
+                                            y2="45"
+                                            stroke="rgba(255,255,255,0.3)"
+                                            stroke-width="0.2"></line>
+                                        <line
+                                            x1="30"
+                                            y1="55"
+                                            x2="45"
+                                            y2="55"
+                                            stroke="rgba(255,255,255,0.3)"
+                                            stroke-width="0.2"></line>
+                                        <line
+                                            id="dim-line"
+                                            x1="40"
+                                            y1="45"
+                                            x2="40"
+                                            y2="55"
+                                            stroke="#94a3b8"
+                                            stroke-width="0.4"></line>
+                                        <path
+                                            id="arrow-top"
+                                            d="M 40,45 L 39.2,46.5 M 40,45 L 40.8,46.5"
+                                            stroke="#94a3b8"
+                                            stroke-width="0.4"></path>
+                                        <path
+                                            id="arrow-bot"
+                                            d="M 40,55 L 39.2,53.5 M 40,55 L 40.8,53.5"
+                                            stroke="#94a3b8"
+                                            stroke-width="0.4"></path>
+                                        <text
+                                            id="dia-text"
+                                            x="40"
+                                            y="50"
+                                            fill="white"
+                                            font-family="monospace"
+                                            font-weight="bold"
+                                            text-anchor="middle"
+                                            dominant-baseline="middle"
+                                            >ø10.00</text
+                                        >
+                                        <text
+                                            id="tol-pos"
+                                            x="42"
+                                            y="49"
+                                            fill="#94a3b8"
+                                            font-family="monospace">+0.005</text
+                                        >
+                                        <text
+                                            id="tol-neg"
+                                            x="42"
+                                            y="51"
+                                            fill="#94a3b8"
+                                            font-family="monospace">-0.010</text
+                                        >
+                                    </svg>
+                                </div>
+
+                                <div
+                                    class="absolute bottom-4 left-0 right-0 text-center"
+                                >
+                                    <p
+                                        class="text-[9px] font-mono text-zinc-600 uppercase tracking-widest"
+                                    >
+                                        Simulated Technical View • 1 Unit = 1mm
+                                    </p>
+                                </div>
+                            </div>
+
+                            <a
+                                href="/profile-generator"
+                                class="mt-6 flex items-center justify-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm font-mono uppercase tracking-widest"
+                            >
+                                <svg
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                                </svg>
+                                Back to Generator
+                            </a>
+
+                            <script is:inline>
+                                const STORAGE_KEY = "scorpio_dim_settings";
+                                const defaults = {
+                                    diaSize: 9,
+                                    diaRot: 0,
+                                    diaOffX: -8,
+                                    tolSize: 7,
+                                    tolOffX: -2.5,
+                                    tolOffY: -21,
+                                    tolGapX: 6,
+                                    tolRot: 0,
+                                    tolGap: 0.5,
+                                };
+
+                                const inputs = [
+                                    "diaSize",
+                                    "diaRot",
+                                    "diaOffX",
+                                    "tolSize",
+                                    "tolOffX",
+                                    "tolOffY",
+                                    "tolGapX",
+                                    "tolRot",
+                                    "tolGap",
+                                ];
+                                let settings = { ...defaults };
+
+                                const stored =
+                                    localStorage.getItem(STORAGE_KEY);
+                                if (stored) {
+                                    try {
+                                        settings = {
+                                            ...defaults,
+                                            ...JSON.parse(stored),
+                                        };
+                                    } catch (e) {}
+                                }
+
+                                // Initial sync UI
+                                inputs.forEach((id) => {
+                                    const el = document.getElementById(id);
+                                    if (el) el.value = settings[id];
+                                });
+
+                                function updatePreview() {
+                                    inputs.forEach((id) => {
+                                        const el = document.getElementById(id);
+                                        if (!el) return;
+                                        settings[id] = parseFloat(el.value);
+                                        const display = document.getElementById(
+                                            id + "Val",
+                                        );
+                                        if (display)
+                                            display.innerText =
+                                                el.value +
+                                                (id.includes("Rot")
+                                                    ? "°"
+                                                    : "mm");
+                                    });
+
+                                    const diaText =
+                                        document.getElementById("dia-text");
+                                    const tolPos =
+                                        document.getElementById("tol-pos");
+                                    const tolNeg =
+                                        document.getElementById("tol-neg");
+
+                                    const PT_TO_MM = 1 / 2.8346;
+                                    const rotAngle = settings.diaRot - 90;
+                                    const diaX = 40 + settings.diaOffX;
+                                    const diaY = 50;
+
+                                    diaText.setAttribute(
+                                        "font-size",
+                                        settings.diaSize * PT_TO_MM,
+                                    );
+                                    diaText.setAttribute("x", diaX);
+                                    diaText.setAttribute("y", diaY);
+                                    diaText.setAttribute(
+                                        "transform",
+                                        `rotate(${rotAngle}, ${diaX}, ${diaY})`,
+                                    );
+
+                                    const tRotAngle = settings.tolRot - 90;
+                                    const baseTolX = diaX + settings.tolOffX;
+                                    const baseTolY = diaY + settings.tolOffY;
+
+                                    tolPos.setAttribute(
+                                        "font-size",
+                                        settings.tolSize * PT_TO_MM,
+                                    );
+                                    tolNeg.setAttribute(
+                                        "font-size",
+                                        settings.tolSize * PT_TO_MM,
+                                    );
+
+                                    const posIterX = baseTolX;
+                                    const negIterX =
+                                        baseTolX + settings.tolGapX;
+                                    const posIterY =
+                                        baseTolY - settings.tolGap / 2;
+                                    const negIterY =
+                                        baseTolY + settings.tolGap / 2;
+
+                                    tolPos.setAttribute("x", posIterX);
+                                    tolPos.setAttribute("y", posIterY);
+                                    tolPos.setAttribute(
+                                        "transform",
+                                        `rotate(${tRotAngle}, ${posIterX}, ${posIterY})`,
+                                    );
+
+                                    tolNeg.setAttribute("x", negIterX);
+                                    tolNeg.setAttribute("y", negIterY);
+                                    tolNeg.setAttribute(
+                                        "transform",
+                                        `rotate(${tRotAngle}, ${negIterX}, ${negIterY})`,
+                                    );
+                                }
+
+                                inputs.forEach((id) => {
+                                    const el = document.getElementById(id);
+                                    if (el)
+                                        el.addEventListener(
+                                            "input",
+                                            updatePreview,
+                                        );
+                                });
+
+                                document.getElementById("saveBtn").onclick =
+                                    () => {
+                                        localStorage.setItem(
+                                            STORAGE_KEY,
+                                            JSON.stringify(settings),
+                                        );
+                                        const btn =
+                                            document.getElementById("saveBtn");
+                                        const original = btn.innerText;
+                                        btn.innerText = "CONFIG SAVED!";
+                                        btn.classList.replace(
+                                            "bg-blue-600",
+                                            "bg-green-600",
+                                        );
+                                        setTimeout(() => {
+                                            btn.innerText = original;
+                                            btn.classList.replace(
+                                                "bg-green-600",
+                                                "bg-blue-600",
+                                            );
+                                        }, 2000);
+                                    };
+
+                                document.getElementById("resetBtn").onclick =
+                                    () => {
+                                        if (
+                                            confirm(
+                                                "Reset to factory defaults?",
+                                            )
+                                        ) {
+                                            settings = { ...defaults };
+                                            inputs.forEach((id) => {
+                                                const el =
+                                                    document.getElementById(id);
+                                                if (el) el.value = settings[id];
+                                            });
+                                            updatePreview();
+                                            localStorage.removeItem(
+                                                STORAGE_KEY,
+                                            );
+                                        }
+                                    };
+
+                                updatePreview();
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>

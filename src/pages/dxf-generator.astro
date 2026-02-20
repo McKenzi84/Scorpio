@@ -1,0 +1,361 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+    title="DXF Generator | Scorpio Tech"
+    description="Generate DXF files for rectangular plates with optional holes and chamfers."
+>
+    <div class="max-w-4xl mx-auto py-8 px-4 space-y-8">
+        <!-- Header -->
+        <section class="text-center space-y-4">
+            <h1 class="text-4xl font-black text-white tracking-tight">
+                DXF <span class="text-blue-500">Generator</span>
+            </h1>
+            <p class="text-slate-400 font-medium">
+                Create precision DXF files for mechanical components.
+            </p>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Configuration -->
+            <div
+                class="glass p-8 rounded-3xl border border-white/5 shadow-2xl space-y-6"
+            >
+                <h2
+                    class="text-xl font-bold text-white flex items-center gap-2"
+                >
+                    <svg
+                        class="w-5 h-5 text-blue-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        ></path>
+                    </svg>
+                    Plate Dimensions
+                </h2>
+
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label
+                                class="text-xs font-mono text-zinc-500 uppercase"
+                                >Width (X) mm</label
+                            >
+                            <input
+                                type="number"
+                                id="width"
+                                value="100"
+                                class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                            />
+                        </div>
+                        <div class="space-y-2">
+                            <label
+                                class="text-xs font-mono text-zinc-500 uppercase"
+                                >Height (Y) mm</label
+                            >
+                            <input
+                                type="number"
+                                id="height"
+                                value="50"
+                                class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                            />
+                        </div>
+                    </div>
+
+                    <input
+                        type="number"
+                        id="chamfer"
+                        value="5"
+                        class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                    />
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-mono text-zinc-500 uppercase"
+                        >Part Description</label
+                    >
+                    <input
+                        type="text"
+                        id="description"
+                        placeholder="e.g. Front Plate - V1"
+                        class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                    />
+                </div>
+
+                <div class="pt-4">
+                    <button
+                        id="generate-btn"
+                        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 group"
+                    >
+                        <svg
+                            class="w-5 h-5 group-hover:scale-110 transition-transform"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                            ></path>
+                        </svg>
+                        Download DXF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview / Info -->
+        <div class="space-y-6">
+            <div
+                class="glass p-8 rounded-3xl border border-white/5 shadow-2xl h-full flex flex-col justify-center items-center text-center"
+            >
+                <div
+                    id="preview-container"
+                    class="w-full aspect-video bg-zinc-950/50 rounded-2xl border border-zinc-800 flex items-center justify-center relative overflow-hidden"
+                >
+                    <!-- Simple SVG Preview -->
+                    <svg
+                        id="svg-preview"
+                        class="max-w-[80%] max-h-[80%]"
+                        viewBox="0 0 100 50"
+                    >
+                        <!-- Drawing Frame Representation -->
+                        <rect
+                            id="preview-frame"
+                            x="-20"
+                            y="-20"
+                            width="140"
+                            height="90"
+                            fill="none"
+                            stroke="#4b5563"
+                            stroke-width="0.5"
+                            stroke-dasharray="2,2"></rect>
+                        <path
+                            id="preview-path"
+                            d=""
+                            fill="none"
+                            stroke="#3b82f6"
+                            stroke-width="1"></path>
+                        <!-- Dimension Lines Representation -->
+                        <line
+                            id="preview-dim-x"
+                            x1="0"
+                            y1="-10"
+                            x2="100"
+                            y2="-10"
+                            stroke="#10b981"
+                            stroke-width="0.5"></line>
+                        <line
+                            id="preview-dim-y"
+                            x1="-10"
+                            y1="0"
+                            x2="-10"
+                            y2="50"
+                            stroke="#10b981"
+                            stroke-width="0.5"></line>
+                        <!-- Text Representation -->
+                        <text
+                            id="preview-text"
+                            x="50"
+                            y="65"
+                            fill="#94a3b8"
+                            font-size="6"
+                            text-anchor="middle"
+                            font-family="monospace"></text>
+                    </svg>
+                    <div
+                        class="absolute inset-0 engineering-grid opacity-20 pointer-events-none"
+                    >
+                    </div>
+                </div>
+                <div class="mt-6 space-y-2">
+                    <p
+                        class="text-sm font-bold text-white uppercase tracking-widest text-blue-400"
+                    >
+                        Technical Preview
+                    </p>
+                    <p class="text-xs text-slate-500 font-mono italic">
+                        Real-time geometry visualization (Scale 1:1 in DXF)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    import { DxfWriter, Units } from "@tarikjabiri/dxf";
+
+    const widthInput = document.getElementById("width") as HTMLInputElement;
+    const heightInput = document.getElementById("height") as HTMLInputElement;
+    const chamferInput = document.getElementById("chamfer") as HTMLInputElement;
+    const descInput = document.getElementById(
+        "description",
+    ) as HTMLInputElement;
+    const generateBtn = document.getElementById("generate-btn");
+    const previewPath = document.getElementById(
+        "preview-path",
+    ) as unknown as SVGPathElement;
+    const previewFrame = document.getElementById(
+        "preview-frame",
+    ) as unknown as SVGRectElement;
+    const previewDimX = document.getElementById(
+        "preview-dim-x",
+    ) as unknown as SVGLineElement;
+    const previewDimY = document.getElementById(
+        "preview-dim-y",
+    ) as unknown as SVGLineElement;
+    const previewText = document.getElementById(
+        "preview-text",
+    ) as unknown as SVGTextElement;
+    const svgPreview = document.getElementById(
+        "svg-preview",
+    ) as unknown as SVGSVGElement;
+
+    function updatePreview() {
+        const w = parseFloat(widthInput.value) || 0;
+        const h = parseFloat(heightInput.value) || 0;
+        const c = parseFloat(chamferInput.value) || 0;
+        const desc = descInput.value || "";
+        const margin = 20;
+
+        // Simple rectangle with chamfers for preview
+        const d = `
+                M ${c} 0 
+                L ${w - c} 0 
+                L ${w} ${c} 
+                L ${w} ${h - c} 
+                L ${w - c} ${h} 
+                L ${c} ${h} 
+                L 0 ${h - c} 
+                L 0 ${c} 
+                Z
+            `;
+        previewPath.setAttribute("d", d);
+
+        // Frame
+        previewFrame.setAttribute("x", (-margin).toString());
+        previewFrame.setAttribute("y", (-margin).toString());
+        previewFrame.setAttribute("width", (w + margin * 2).toString());
+        previewFrame.setAttribute("height", (h + margin * 2).toString());
+
+        // Dimensions
+        previewDimX.setAttribute("x1", "0");
+        previewDimX.setAttribute("y1", "-10");
+        previewDimX.setAttribute("x2", w.toString());
+        previewDimX.setAttribute("y2", "-10");
+
+        previewDimY.setAttribute("x1", "-10");
+        previewDimY.setAttribute("y1", "0");
+        previewDimY.setAttribute("x2", "-10");
+        previewDimY.setAttribute("y2", h.toString());
+
+        // Text
+        previewText.setAttribute("x", (w / 2).toString());
+        previewText.setAttribute("y", (h + margin - 5).toString());
+        previewText.textContent = desc;
+
+        svgPreview.setAttribute(
+            "viewBox",
+            `${-margin - 5} ${-margin - 5} ${w + margin * 2 + 10} ${h + margin * 2 + 10}`,
+        );
+    }
+
+    async function generateDXF() {
+        const w = parseFloat(widthInput.value) || 100;
+        const h = parseFloat(heightInput.value) || 50;
+        const c = parseFloat(chamferInput.value) || 0;
+
+        const dxf = new DxfWriter();
+        dxf.setUnits(Units.Millimeters);
+
+        // Points for the chamfered rectangle
+        const pts = [
+            [c, 0],
+            [w - c, 0],
+            [w, c],
+            [w, h - c],
+            [w - c, h],
+            [c, h],
+            [0, h - c],
+            [0, c],
+        ];
+
+        const margin = 20;
+
+        // Add Frame
+        dxf.addRectangle(
+            { x: -margin, y: -margin },
+            { x: w + margin, y: h + margin },
+        );
+
+        // Add Dimensions
+        dxf.addAlignedDim(
+            { x: 0, y: 0, z: 0 },
+            { x: w, y: 0, z: 0 },
+            { offset: 10 },
+        );
+        dxf.addAlignedDim(
+            { x: 0, y: 0, z: 0 },
+            { x: 0, y: h, z: 0 },
+            { offset: 10 },
+        );
+
+        // Add Text
+        const desc = descInput.value || "Drawing";
+        dxf.addText(
+            { x: w / 2, y: -margin + 5, z: 0 },
+            5,
+            desc,
+            { horizontalAlignment: 1 }, // Center aligned
+        );
+
+        // Add lines for the part
+        for (let i = 0; i < pts.length; i++) {
+            const p1 = pts[i];
+            const p2 = pts[(i + 1) % pts.length];
+            dxf.addLine(
+                { x: Number(p1[0]), y: Number(p1[1]), z: 0 },
+                { x: Number(p2[0]), y: Number(p2[1]), z: 0 },
+            );
+        }
+
+        const dxfString = dxf.stringify();
+        const blob = new Blob([dxfString], { type: "application/dxf" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `plate_${w}x${h}_c${c}.dxf`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    widthInput.addEventListener("input", updatePreview);
+    heightInput.addEventListener("input", updatePreview);
+    chamferInput.addEventListener("input", updatePreview);
+    descInput.addEventListener("input", updatePreview);
+    generateBtn?.addEventListener("click", generateDXF);
+
+    // Initial preview
+    updatePreview();
+</script>
+
+<style>
+    .glass {
+        background: rgba(10, 10, 12, 0.7);
+        backdrop-filter: blur(12px);
+    }
+    .engineering-grid {
+        background-image: radial-gradient(circle, #3b82f6 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+</style>

@@ -1,0 +1,29 @@
+Create new page : profile-generator.astro
+
+Purpose is to generate .dxf drawing from user input. 
+
+Inputs: 
+1.number of diameters ( from 1-5 ) -> depending on the choosen number input for each diameter should appear. 
+For each diameter input must contain: 
+*diameter
+*length 
+*step angle with next diameter (if next diameter exist)
+*tolerance ( assymetric ie: +0.001 -0.010)
+
+2.point angle
+3.overallength
+4.shank diameter 
+5.back chamfer 
+
+6. text input - it will be use to fill the table in A4 frame. 
+
+page must contain preview graph to give user visual interpreataion of inputs. 
+
+(here base on tool-profile.astro)
+
+Add option to export the profile to .dxf file. 
+
+Add option to export profile to .pdf. Add A4 frame . 
+
+(base on file: dxf-generator.astro)
+
