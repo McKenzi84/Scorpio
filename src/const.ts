@@ -7,7 +7,7 @@ export const NAV_LINKS = [
   // { href: '/calculator', label: 'Calculators' },
   
   { href: '/carbide-info', label: 'Carbide info' },
-  // { href: '/graph', label: 'Graphs' },
+  { href: '/graph', label: 'Graphs' },
   { href: '/calculator', label: 'Calculators' },
   // { href: '/dxf-generator', label: 'DXF Generator' },
   // { href: '/profile-generator', label: 'Profile Generator' },
