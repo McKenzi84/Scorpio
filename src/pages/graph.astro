@@ -1,16 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 const API_URL = import.meta.env.PUBLIC_GOOGLE_SHEET_API_URL;
-
-let salesData = [];
-
-try {
-  const response = await fetch(API_URL);
-  salesData = await response.json();
-} catch (error) {
-  console.error("Fetch error:", error);
-}
-// console.log("Fetched sales data:", salesData);
 ---
 
 <Layout
@@ -112,11 +102,17 @@ try {
     </div>
   </div>
 
-  <script is:inline define:vars={{ salesData }}>
-    // Passing data via define:vars which Astro handles automatically
-    import("https://esm.sh/plotly.js-dist-min@2.35.2")
-      .then(({ default: Plotly }) => {
-        const chartDiv = document.getElementById("plotly-chart");
+  <script is:inline define:vars={{ API_URL }}>
+    // Perform fetch on client-side for real-time updates
+    async function loadChart() {
+      const chartDiv = document.getElementById("plotly-chart");
+
+      try {
+        const response = await fetch(API_URL);
+        const salesData = await response.json();
+
+        const { default: Plotly } =
+          await import("https://esm.sh/plotly.js-dist-min@2.35.2");
 
         // Support both direct array and nested {data: []} structure
         const rawRows = Array.isArray(salesData)
@@ -267,10 +263,12 @@ try {
         } else {
           window.addEventListener("resize", draw);
         }
-      })
-      .catch((err) => {
-        chartDiv.innerHTML = `<span class="text-red-400 font-mono">Failed to load Plotly Engine: ${err.message}</span>`;
-      });
+      } catch (err) {
+        chartDiv.innerHTML = `<span class="text-red-400 font-mono">Failed to load data: ${err.message}</span>`;
+      }
+    }
+
+    loadChart();
   </script>
 </Layout>
 
