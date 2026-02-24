@@ -1,0 +1,95 @@
+---
+const API_URL =
+  "https://script.googleusercontent.com/macros/echo?user_content_key=AY5xjrQwFignxC9E1HgMz-RwS05cDp5FJQDn1YnUDndayycm1qcsPWFwnOaA3Ygu1h4FR0Xss8fre9iCLlMpROnI8o0KdbziHD1fDzcEFoCf8tgzwEZLoXwxjWCkVT0BhmpQVQTgI3oXjz0YG7R9MNoQX2WXQ56zPibLzbT44pJ5LUox1_6m9ll2tcs0tKSi9Y_KJV_b4M6HcfaL0Xn2lDsi4KtLU0npLG1uaG6Sdy4y5ZouB5NEJBn5VLt4X_6nTwku6yXLV8W7OKdAqooUxOaZJAXvOb9xXw&lib=MNvIMHXKEoDNEQw6YCZLtVoEDlfBAFrHw";
+
+let records = [];
+let totals = {};
+
+try {
+  const response = await fetch(API_URL);
+  records = await response.json();
+
+  // Aggregate totals per customer
+  for (const item of records) {
+    if (!totals[item.Customer]) {
+      totals[item.Customer] = 0;
+    }
+    totals[item.Customer] += Number(item.Value);
+  }
+} catch (error) {
+  console.error("Fetch error:", error);
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Customer Values</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 40px;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background: #f2f2f2;
+      }
+      .summary {
+        max-width: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Customer Records</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          records.map((record) => (
+            <tr>
+              <td>{record.Customer}</td>
+              <td>{record.Value}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+
+    <h2>Totals Per Customer</h2>
+
+    <table class="summary">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Total Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          Object.entries(totals).map(([customer, total]) => (
+            <tr>
+              <td>{customer}</td>
+              <td>{total}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -5,12 +5,13 @@ export const BASE_URL = '';
 export const NAV_LINKS = [
   // { href: '/', label: 'Home' },
   // { href: '/calculator', label: 'Calculators' },
-  { href: '/tool-profile', label: 'Tool profile' },
+  
   { href: '/carbide-info', label: 'Carbide info' },
   { href: '/graph', label: 'Graphs' },
   { href: '/calculator', label: 'Calculators' },
-  { href: '/dxf-generator', label: 'DXF Generator' },
-  { href: '/profile-generator', label: 'Profile Generator' },
+  // { href: '/dxf-generator', label: 'DXF Generator' },
+  // { href: '/profile-generator', label: 'Profile Generator' },
+  // { href: '/tool-profile', label: 'Tool profile' },
 
   // { href: '/test', label: 'Test Page' },
   // { href: 'https://github.com/McKenzi84/ScorpioAstro', label: 'GitHub' },
