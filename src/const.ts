@@ -5,7 +5,7 @@ export const BASE_URL = '';
 export const NAV_LINKS = [
   // { href: '/', label: 'Home' },
   // { href: '/calculator', label: 'Calculators' },
-  
+  { href: '/result', label: 'Results' },
   { href: '/carbide-info', label: 'Carbide info' },
   { href: '/graph', label: 'Graphs' },
   { href: '/calculator', label: 'Calculators' },
