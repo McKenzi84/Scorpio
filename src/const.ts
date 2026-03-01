@@ -9,6 +9,7 @@ export const NAV_LINKS = [
   { href: '/carbide-info', label: 'Carbide info' },
   { href: '/graph', label: 'Graphs' },
   { href: '/calculator', label: 'Calculators' },
+  { href: '/code-apps', label: 'CodeApps' },
 
   // { href: '/test', label: 'Test Page' },
   // { href: 'https://github.com/McKenzi84/ScorpioAstro', label: 'GitHub' },
