@@ -1,0 +1,263 @@
+---
+import Layout from "../layouts/Layout.astro";
+const API_URL = import.meta.env.PUBLIC_GOOGLE_SHEET_API_URL_2;
+---
+
+<Layout
+  title="Measurement Results | Scorpio"
+  description="View measurement results stored in Google Sheets."
+>
+  <div class="max-w-6xl mx-auto py-8 px-4 space-y-8">
+    <!-- Header -->
+    <div class="space-y-4 text-center">
+      <div
+        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono uppercase tracking-widest"
+      >
+        Measurement System V1.0
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">
+        Measurement <span class="text-blue-500">Results</span>
+      </h1>
+      <p class="text-slate-400 max-w-xl mx-auto">
+        Filter measurements by serial number to view detailed item data.
+      </p>
+    </div>
+
+    <!-- Search Input -->
+    <div class="max-w-md mx-auto relative group">
+      <div
+        class="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-emerald-500/20 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-1000"
+      >
+      </div>
+      <div class="relative flex items-center">
+        <input
+          type="text"
+          id="serial-search"
+          placeholder="Enter Serial Number (e.g. GG1)"
+          class="w-full bg-zinc-900/50 border border-zinc-800 focus:border-blue-500/50 text-white rounded-xl py-3 px-4 outline-none transition-all placeholder:text-zinc-600 font-mono"
+        />
+        <div class="absolute right-3 text-zinc-500">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-search"
+            ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"
+            ></path></svg
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Container -->
+    <div id="results-container" class="hidden space-y-6">
+      <div class="relative group">
+        <div
+          class="absolute -inset-1 bg-gradient-to-r from-blue-500/10 to-emerald-500/10 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000"
+        >
+        </div>
+        <div
+          class="relative bg-zinc-900/50 border border-zinc-800/50 rounded-xl overflow-hidden"
+        >
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-zinc-800/50">
+              <tr>
+                <tr>
+                  <th
+                    class="px-6 py-2 text-xs font-mono uppercase tracking-wider text-slate-400 border-b border-zinc-700/50"
+                    >#</th
+                  >
+                  <th
+                    class="px-6 py-2 text-xs font-mono uppercase tracking-wider text-slate-400 border-b border-zinc-700/50"
+                    >Measurement</th
+                  >
+                  <th
+                    class="px-6 py-2 text-xs font-mono uppercase tracking-wider text-slate-400 border-b border-zinc-700/50"
+                    >Dim</th
+                  >
+                  <th
+                    class="px-6 py-2 text-xs font-mono uppercase tracking-wider text-slate-400 border-b border-zinc-700/50"
+                    >Tol (+)</th
+                  >
+                  <th
+                    class="px-6 py-2 text-xs font-mono uppercase tracking-wider text-slate-400 border-b border-zinc-700/50"
+                    >Tol (-)</th
+                  >
+                  <th
+                    class="px-6 py-2 text-xs font-mono uppercase tracking-wider text-slate-400 border-b border-zinc-700/50"
+                    id="result-header-row"
+                  >
+                    <!-- Dynamic headers will be injected here -->
+                  </th>
+                </tr>
+              </tr>
+              <tbody
+                id="results-body"
+                class="divide-y divide-zinc-800/50 text-slate-300"
+              >
+                <!-- Rows injected here -->
+              </tbody>
+            </thead>
+          </table>
+        </div>
+      </div>
+
+      <!-- Empty/Loading State -->
+      <div
+        id="status-message"
+        class="text-center py-12 text-slate-500 font-mono text-sm"
+      >
+        Enter serial numbers (e.g. GG1, GG2) to see results.
+      </div>
+    </div>
+
+    <script is:inline define:vars={{ API_URL }}>
+      let allData = [];
+      let headers = [];
+
+      async function fetchData() {
+        try {
+          const response = await fetch(API_URL);
+          const json = await response.json();
+
+          allData = Array.isArray(json) ? json : json.data || [];
+
+          if (allData.length > 0) {
+            headers = allData[0];
+          }
+        } catch (err) {
+          console.error("Fetch error:", err);
+          document.getElementById("status-message").innerText =
+            "Failed to load data from server.";
+        }
+      }
+
+      function updateDisplay(inputString) {
+        const container = document.getElementById("results-container");
+        const body = document.getElementById("results-body");
+        const status = document.getElementById("status-message");
+        const headerRow = document.getElementById("result-header-row");
+
+        if (!inputString) {
+          container.classList.add("hidden");
+          status.classList.remove("hidden");
+          status.innerText = "Enter serial numbers to see results.";
+          return;
+        }
+
+        // Split input by comma or space and filter out empty strings
+        const searchTerms = inputString
+          .split(/[,\s]+/)
+          .filter((t) => t.trim().length > 0);
+
+        if (searchTerms.length === 0) {
+          container.classList.add("hidden");
+          status.classList.remove("hidden");
+          status.innerText = "Enter serial numbers to see results.";
+          return;
+        }
+
+        // Map each term to its column index in the sheet
+        const matchedIndexes = searchTerms
+          .map((term) => {
+            const idx = headers.findIndex(
+              (h, i) => i >= 5 && h.toLowerCase() === term.toLowerCase(),
+            );
+            return { term, idx };
+          })
+          .filter((item) => item.idx !== -1);
+
+        if (matchedIndexes.length === 0) {
+          container.classList.add("hidden");
+          status.classList.remove("hidden");
+          status.innerText = `No measurements found for: ${searchTerms.join(", ")}`;
+          return;
+        }
+
+        // Update Dynamic Headers
+        headerRow.innerHTML = "";
+        matchedIndexes.forEach((item) => {
+          const th = document.createElement("div");
+          th.className =
+            "inline-block px-4 py-2 border-l border-zinc-700/50 first:border-l-0 text-blue-400 font-bold min-w-[100px] text-center";
+          th.innerText = headers[item.idx];
+          headerRow.appendChild(th);
+        });
+
+        body.innerHTML = "";
+
+        // Iterate through data rows (skipping header)
+        for (let i = 1; i < allData.length; i++) {
+          const row = allData[i];
+          if (!row[0]) continue; // Skip empty rows
+
+          const tr = document.createElement("tr");
+          tr.className = "hover:bg-zinc-800/30 transition-colors";
+
+          // Base columns: MaeNo, Mea, Dim, UperTol, LowerTol
+          const baseColumns = [0, 1, 2, 3, 4];
+
+          baseColumns.forEach((colIdx, displayIdx) => {
+            const td = document.createElement("td");
+            td.className = "px-6 py-2 text-sm";
+            if (displayIdx === 0)
+              td.className += " font-mono text-xs text-zinc-500 w-12";
+            if (displayIdx === 1) td.className += " font-medium text-slate-200";
+
+            td.innerText = row[colIdx] || "-";
+            tr.appendChild(td);
+          });
+
+          // Result columns
+          const resultsTd = document.createElement("td");
+          resultsTd.className = "px-0 py-0 text-sm border-l border-zinc-700/50";
+
+          const resultsWrapper = document.createElement("div");
+          resultsWrapper.className = "flex h-full";
+
+          matchedIndexes.forEach((item) => {
+            const cell = document.createElement("div");
+            cell.className =
+              "px-4 py-2 border-r border-zinc-700/50 last:border-r-0 font-bold text-blue-400 min-w-[100px] text-center";
+            cell.innerText = row[item.idx] || "-";
+            resultsWrapper.appendChild(cell);
+          });
+
+          resultsTd.appendChild(resultsWrapper);
+          tr.appendChild(resultsTd);
+
+          body.appendChild(tr);
+        }
+
+        container.classList.remove("hidden");
+        status.classList.add("hidden");
+      }
+
+      const searchInput = document.getElementById("serial-search");
+      searchInput.addEventListener("input", (e) => {
+        const value = e.target.value.trim();
+        updateDisplay(value);
+      });
+
+      // Initial fetch
+      fetchData();
+    </script>
+  </div>
+
+  <style>
+    .engineering-grid {
+      background-image: radial-gradient(
+        circle at 2px 2px,
+        rgba(255, 255, 255, 0.05) 1px,
+        transparent 0
+      );
+      background-size: 24px 24px;
+    }
+  </style>
+</Layout>

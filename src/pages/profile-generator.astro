@@ -1,0 +1,1082 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+    title="Profile Generator | Scorpio Tech"
+    description="Generate tool profiles with technical drawings in DXF and PDF."
+>
+    <div
+        class="max-w-[1600px] mx-auto py-6 px-4 min-h-screen flex flex-col gap-6 lg:h-screen lg:overflow-hidden"
+    >
+        <!-- Header -->
+        <div
+            class="bg-zinc-900/80 border border-zinc-800/50 rounded-2xl p-4 shadow-2xl backdrop-blur-md"
+        >
+            <div class="flex flex-wrap items-end gap-6">
+                <div class="pr-6 border-r border-zinc-800 hidden xl:block">
+                    <h1 class="text-xl font-bold text-white tracking-tight">
+                        Profile <span class="text-blue-500">Generator</span>
+                    </h1>
+                </div>
+
+                <!-- Global Inputs -->
+                <div class="flex flex-1 flex-wrap gap-4 items-end">
+                    <div class="space-y-1.5 min-w-[140px]">
+                        <label
+                            class="text-[10px] font-mono text-zinc-500 uppercase"
+                            ># Diameters</label
+                        >
+                        <select
+                            id="s_steps"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                        >
+                            <option value="1" selected>1 Diameter</option>
+                            <option value="2">2 Diameters</option>
+                            <option value="3">3 Diameters</option>
+                            <option value="4">4 Diameters</option>
+                            <option value="5">5 Diameters</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-1.5 min-w-[100px]">
+                        <label
+                            class="text-[10px] font-mono text-zinc-500 uppercase"
+                            >Point Angle (°)</label
+                        >
+                        <input
+                            type="number"
+                            id="point_angle"
+                            value="140"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                        />
+                    </div>
+
+                    <div class="space-y-1.5 min-w-[100px]">
+                        <label
+                            class="text-[10px] font-mono text-zinc-500 uppercase"
+                            >OAL (mm)</label
+                        >
+                        <input
+                            type="number"
+                            id="oal"
+                            value="100"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                        />
+                    </div>
+
+                    <div class="space-y-1.5 min-w-[100px]">
+                        <label
+                            class="text-[10px] font-mono text-zinc-500 uppercase"
+                            >Shank ø</label
+                        >
+                        <input
+                            type="number"
+                            id="shank_d"
+                            value="12"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                        />
+                    </div>
+
+                    <div class="space-y-1.5 min-w-[100px]">
+                        <label
+                            class="text-[10px] font-mono text-zinc-500 uppercase"
+                            >Back Chamfer</label
+                        >
+                        <input
+                            type="number"
+                            id="back_chamfer"
+                            value="1"
+                            step="0.1"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                        />
+                    </div>
+
+                    <div class="space-y-1.5 flex-1 min-w-[200px]">
+                        <label
+                            class="text-[10px] font-mono text-zinc-500 uppercase"
+                            >Drawing Title</label
+                        >
+                        <input
+                            type="text"
+                            id="drawing_title"
+                            placeholder="e.g. CUSTOM DRILL V1"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
+            <!-- Sidebar: Parameters -->
+            <div class="lg:w-80 flex flex-col gap-4 overflow-hidden">
+                <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                    <h2
+                        class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-3 px-2"
+                    >
+                        Diameter Specs
+                    </h2>
+                    <div id="accordion-container" class="space-y-2"></div>
+                </div>
+
+                <!-- Export Panel -->
+                <div
+                    class="bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-4 space-y-3 shadow-xl"
+                >
+                    <button
+                        id="export-dxf"
+                        class="w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-3 rounded-xl text-xs font-bold transition-all shadow-lg flex items-center justify-center gap-2 group"
+                    >
+                        <svg
+                            class="w-4 h-4 group-hover:scale-110 transition-transform"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                            ></path></svg
+                        >
+                        Export DXF (A4)
+                    </button>
+                    <button
+                        id="export-pdf"
+                        class="w-full bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-3 rounded-xl text-xs font-bold transition-all shadow-lg flex items-center justify-center gap-2 group"
+                    >
+                        <svg
+                            class="w-4 h-4 group-hover:scale-110 transition-transform"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                            ></path></svg
+                        >
+                        Export PDF (A4)
+                    </button>
+                    <a
+                        href="/dimension-config"
+                        class="w-full bg-zinc-900/50 hover:bg-zinc-800 border border-zinc-800 text-zinc-500 hover:text-white font-bold py-2 px-4 rounded-xl flex items-center justify-center gap-2 transition-all uppercase tracking-widest text-[10px]"
+                    >
+                        <svg
+                            class="w-3 h-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                            ></path><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            ></path></svg
+                        >
+                        Dim Settings
+                    </a>
+                </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="flex-1 flex flex-col gap-4 min-h-0">
+                <div
+                    class="flex-1 bg-zinc-950/20 border border-zinc-800/50 rounded-3xl overflow-hidden relative shadow-inner"
+                >
+                    <div id="plotly-graph" class="w-full h-full"></div>
+                </div>
+
+                <div
+                    class="flex items-center gap-6 justify-center py-2 px-6 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl"
+                >
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.3)]"
+                        >
+                        </div>
+                        <span
+                            class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest"
+                            >Profile</span
+                        >
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]"
+                        >
+                        </div>
+                        <span
+                            class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest"
+                            >Shank</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script is:inline>
+        // Dynamically load dependencies
+        const loadScript = (src) =>
+            new Promise((res) => {
+                const script = document.createElement("script");
+                script.src = src;
+                script.onload = res;
+                document.head.appendChild(script);
+            });
+
+        Promise.all([
+            import("https://esm.sh/plotly.js-dist-min@2.35.2"),
+            import("https://esm.sh/@tarikjabiri/dxf"),
+            loadScript(
+                "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
+            ),
+        ]).then(([{ default: Plotly }, { DxfWriter, Units }, _]) => {
+            const { jsPDF } = window.jspdf;
+
+            const graphDiv = document.getElementById("plotly-graph");
+            const stepsInput = document.getElementById("s_steps");
+            const accordionContainer = document.getElementById(
+                "accordion-container",
+            );
+            const inputs = [
+                "point_angle",
+                "oal",
+                "shank_d",
+                "back_chamfer",
+                "drawing_title",
+            ];
+
+            function createAccordions() {
+                const steps = parseInt(stepsInput.value);
+                accordionContainer.innerHTML = "";
+                for (let i = 1; i <= steps; i++) {
+                    const div = document.createElement("div");
+                    div.className =
+                        "bg-zinc-900/50 border border-zinc-800/80 rounded-xl overflow-hidden group";
+                    div.innerHTML = `
+                        <button class="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-zinc-800/30 transition-all accordion-btn" data-target="d${i}-content">
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-lg bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-400 group-hover:bg-zinc-700 transition-colors">
+                                    ${i}
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-bold text-zinc-300 uppercase leading-none">Diameter ${i}</p>
+                                    <p class="text-[10px] text-zinc-500 font-mono mt-1" id="d${i}-summary">ø 10.0mm • L 15.0mm</p>
+                                </div>
+                            </div>
+                            <svg class="w-4 h-4 text-zinc-600 transition-transform duration-300 transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div id="d${i}-content" class="${i === 1 ? "" : "hidden"} px-4 pb-4 pt-1 space-y-3 bg-zinc-950/20">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">ø (mm)</label>
+                                    <input type="number" id="d${i}" value="${10 + (i - 1) * 2}" step="0.1" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-blue-500 transition-colors val-input" />
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">Length (mm)</label>
+                                    <input type="number" id="d${i}_l" value="${10 + (i - 1) * 10}" step="0.1" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-blue-500 transition-colors val-input" />
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">Tol +</label>
+                                    <input type="number" id="d${i}_tp" value="0.005" step="0.001" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-blue-500 transition-colors val-input" />
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">Tol -</label>
+                                    <input type="number" id="d${i}_tm" value="-0.010" step="0.001" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-blue-500 transition-colors val-input" />
+                                </div>
+                            </div>
+                            ${
+                                i < steps
+                                    ? `
+                                <div class="space-y-1">
+                                    <label class="text-[9px] font-mono text-zinc-500 uppercase tracking-wider">Step Angle (°)</label>
+                                    <input type="number" id="step_${i}_angle" value="90" min="30" max="180" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-blue-500 transition-colors val-input" />
+                                </div>
+                            `
+                                    : ""
+                            }
+                        </div>
+                    `;
+                    accordionContainer.appendChild(div);
+                }
+
+                document.querySelectorAll(".accordion-btn").forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        const target = document.getElementById(
+                            btn.dataset.target,
+                        );
+                        target.classList.toggle("hidden");
+                        btn.querySelector("svg").classList.toggle("rotate-180");
+                    });
+                });
+
+                document.querySelectorAll("input, select").forEach((el) => {
+                    el.addEventListener("input", update);
+                });
+                update();
+            }
+
+            function getParams() {
+                const s_steps = parseInt(stepsInput.value);
+                const p = {
+                    s_steps,
+                    point_angle: parseFloat(
+                        document.getElementById("point_angle").value,
+                    ),
+                    oal: parseFloat(document.getElementById("oal").value),
+                    shank_d: parseFloat(
+                        document.getElementById("shank_d").value,
+                    ),
+                    back_chamfer: parseFloat(
+                        document.getElementById("back_chamfer").value,
+                    ),
+                    drawing_title:
+                        document.getElementById("drawing_title").value,
+                };
+                for (let i = 1; i <= s_steps; i++) {
+                    p[`d${i}`] = parseFloat(
+                        document.getElementById(`d${i}`).value,
+                    );
+                    p[`d${i}_l`] = parseFloat(
+                        document.getElementById(`d${i}_l`).value,
+                    );
+                    p[`d${i}_tp`] = parseFloat(
+                        document.getElementById(`d${i}_tp`).value,
+                    );
+                    p[`d${i}_tm`] = parseFloat(
+                        document.getElementById(`d${i}_tm`).value,
+                    );
+                    if (i < s_steps)
+                        p[`step_${i}_angle`] = parseFloat(
+                            document.getElementById(`step_${i}_angle`).value,
+                        );
+                }
+                return p;
+            }
+
+            function calculateProfile(p) {
+                const pts = [];
+                // Tip start: Point angle handling
+                // Half angle alpha = point_angle / 2
+                // tan(alpha) = (D/2) / dX => dX = (D/2) / tan(alpha)
+                const tip_dx =
+                    p.d1 / 2 / Math.tan(((p.point_angle / 2) * Math.PI) / 180);
+                const tip_x = -tip_dx;
+
+                pts.push([tip_x, 0]);
+                pts.push([0, p.d1 / 2]);
+
+                let curX = p.d1_l;
+                pts.push([curX, p.d1 / 2]);
+
+                for (let i = 1; i < p.s_steps; i++) {
+                    const curD = p[`d${i}`];
+                    const nextD = p[`d${i + 1}`];
+                    const angle = p[`step_${i}_angle`];
+                    const nextL = p[`d${i + 1}_l`];
+
+                    // Transition angle: usually it's the included angle
+                    // tan(angle/2) = (deltaD/2) / deltaX
+                    const stepLen =
+                        Math.abs(nextD - curD) /
+                        2 /
+                        Math.tan(((angle / 2) * Math.PI) / 180);
+                    curX += stepLen;
+                    pts.push([curX, nextD / 2]);
+
+                    if (nextL > curX) {
+                        curX = nextL;
+                        pts.push([curX, nextD / 2]);
+                    }
+                }
+
+                // Shank connection: sudden step or smooth? User said "shank diameter"
+                // If shank_d is different from last diameter, we add a step
+                const lastD = p[`d${p.s_steps}`];
+                if (Math.abs(p.shank_d - lastD) > 0.001) {
+                    pts.push([curX, p.shank_d / 2]);
+                }
+
+                // End of shank
+                pts.push([p.oal - p.back_chamfer, p.shank_d / 2]);
+                pts.push([p.oal, p.shank_d / 2 - p.back_chamfer]);
+                pts.push([p.oal, 0]);
+
+                return pts;
+            }
+
+            function update() {
+                const p = getParams();
+                const pts = calculateProfile(p);
+
+                const traceUpper = {
+                    x: pts.map((pt) => pt[0]),
+                    y: pts.map((pt) => pt[1]),
+                    mode: "lines",
+                    line: { color: "#3b82f6", width: 2.5 },
+                    name: "Profile",
+                };
+                const traceLower = {
+                    x: pts.map((pt) => pt[0]),
+                    y: pts.map((pt) => -pt[1]),
+                    mode: "lines",
+                    line: { color: "#3b82f6", width: 2.5 },
+                    showlegend: false,
+                };
+                const traceCenter = {
+                    x: [pts[0][0] - 5, p.oal + 5],
+                    y: [0, 0],
+                    mode: "lines",
+                    line: { color: "#ef4444", width: 1, dash: "dashdot" },
+                    showlegend: false,
+                };
+
+                const shapes = [];
+                const annotations = [];
+
+                // Mid-y for annotations
+                const maxY = Math.max(
+                    p.shank_d / 2,
+                    ...Array.from(
+                        { length: p.s_steps },
+                        (_, i) => p[`d${i + 1}`] / 2,
+                    ),
+                );
+                const topStart = maxY + 10;
+
+                // Add Dimensions to Preview
+                for (let i = 1; i <= p.s_steps; i++) {
+                    const d = p[`d${i}`];
+                    const l = p[`d${i}_l`];
+                    const xStart = i === 1 ? 0 : p[`d${i - 1}_l`];
+                    const xMid = (xStart + l) / 2;
+
+                    // Diameter Dimension Line (Vertical)
+                    shapes.push({
+                        type: "line",
+                        x0: xMid,
+                        y0: -d / 2,
+                        x1: xMid,
+                        y1: d / 2,
+                        line: {
+                            color: "rgba(255,255,255,0.15)",
+                            width: 1,
+                            dash: "dot",
+                        },
+                    });
+
+                    // Diameter Label
+                    annotations.push({
+                        x: xMid,
+                        y: d / 2 + 3,
+                        text: `ø${d.toFixed(2)}`,
+                        showarrow: false,
+                        font: {
+                            size: 9,
+                            color: "#60a5fa",
+                            family: "monospace",
+                        },
+                        textangle: -90,
+                    });
+
+                    // Length Dimension Line (Horizontal)
+                    const yPos = topStart + i * 6;
+                    shapes.push({
+                        type: "line",
+                        x0: 0,
+                        y0: yPos,
+                        x1: l,
+                        y1: yPos,
+                        line: { color: "rgba(59,130,246,0.3)", width: 1 },
+                    });
+
+                    // Length Label
+                    annotations.push({
+                        x: l / 2,
+                        y: yPos + 2.5,
+                        text: `L=${l.toFixed(2)}`,
+                        showarrow: false,
+                        font: {
+                            size: 9,
+                            color: "#3b82f6",
+                            family: "monospace",
+                        },
+                    });
+                }
+
+                // OAL Dimension
+                const oalY = topStart + p.s_steps * 6 + 12;
+                shapes.push({
+                    type: "line",
+                    x0: 0,
+                    y0: oalY,
+                    x1: p.oal,
+                    y1: oalY,
+                    line: { color: "#ef4444", width: 1.5 },
+                });
+                annotations.push({
+                    x: p.oal / 2,
+                    y: oalY + 3,
+                    text: `OAL=${p.oal.toFixed(2)}`,
+                    showarrow: false,
+                    font: {
+                        size: 10,
+                        color: "#ef4444",
+                        family: "monospace",
+                        weight: "bold",
+                    },
+                });
+
+                // Shank ø
+                shapes.push({
+                    type: "line",
+                    x0: p.oal,
+                    y0: -p.shank_d / 2,
+                    x1: p.oal,
+                    y1: p.shank_d / 2,
+                    line: { color: "rgba(168,85,247,0.5)", width: 2 },
+                });
+                annotations.push({
+                    x: p.oal + 3,
+                    y: 0,
+                    text: `ø${p.shank_d.toFixed(2)}`,
+                    showarrow: false,
+                    font: { size: 9, color: "#a855f7", family: "monospace" },
+                    textangle: -90,
+                });
+
+                Plotly.react(
+                    graphDiv,
+                    [traceUpper, traceLower, traceCenter],
+                    {
+                        template: "plotly_dark",
+                        paper_bgcolor: "rgba(0,0,0,0)",
+                        plot_bgcolor: "rgba(0,0,0,0)",
+                        margin: { l: 40, r: 80, b: 60, t: 40 },
+                        xaxis: {
+                            title: "Length (mm)",
+                            showgrid: false,
+                            zeroline: false,
+                            range: [-15, p.oal + 30],
+                        },
+                        yaxis: {
+                            title: "ø (mm)",
+                            showgrid: false,
+                            scaleanchor: "x",
+                            zeroline: false,
+                            range: [-maxY - 5, oalY + 10],
+                        },
+                        shapes,
+                        annotations,
+                    },
+                    { responsive: true, displayModeBar: false },
+                );
+
+                // Update summaries
+                for (let i = 1; i <= p.s_steps; i++) {
+                    const s = document.getElementById(`d${i}-summary`);
+                    if (s)
+                        s.innerText = `ø ${p[`d${i}`]}mm (${p[`d${i}_tp`].toFixed(3)}/${p[`d${i}_tm`].toFixed(3)}) • L ${p[`d${i}_l`]}mm`;
+                }
+            }
+
+            // --- EXPORT LOGIC ---
+            function drawA4Frame(writer, title) {
+                // A4 is 297x210
+                const ox = 0;
+                const oy = 0;
+
+                // Outer border
+                writer.addRectangle(
+                    { x: ox, y: oy },
+                    { x: ox + 297, y: oy + 210 },
+                );
+                // Inner technical frame
+                writer.addRectangle(
+                    { x: ox + 10, y: oy + 10 },
+                    { x: ox + 292, y: oy + 205 },
+                );
+
+                // Title Block (Bottom Right)
+                const bx = 292 - 80;
+                const by = 10;
+                writer.addRectangle({ x: bx, y: by }, { x: 292, y: by + 25 });
+                writer.addText(
+                    { x: bx + 2, y: by + 18, z: 0 },
+                    4,
+                    title || "SCORPIO TOOL PROFILE",
+                );
+                writer.addText(
+                    { x: bx + 2, y: by + 5, z: 0 },
+                    2.5,
+                    `DATE: ${new Date().toLocaleDateString()}`,
+                );
+                writer.addText(
+                    { x: bx + 40, y: by + 5, z: 0 },
+                    2.5,
+                    "SCALE: 2:1",
+                );
+            }
+
+            document.getElementById("export-dxf").onclick = () => {
+                const p = getParams();
+                const pts = calculateProfile(p);
+                const writer = new DxfWriter();
+                writer.setUnits(Units.Millimeters);
+
+                // --- Load Custom Settings ---
+                const saved = localStorage.getItem("scorpio_dim_settings");
+                const s = saved
+                    ? JSON.parse(saved)
+                    : {
+                          diaSize: 9,
+                          diaRot: 0,
+                          diaOffX: -8,
+                          tolSize: 7,
+                          tolOffX: -2.5,
+                          tolOffY: -21,
+                          tolGapX: 6,
+                          tolRot: 0,
+                          tolGap: 0.5,
+                      };
+
+                // Scale factor for text (pt to mm)
+                const ptToMm = 0.3527;
+
+                // --- Technical Frame (A4 297x210) ---
+                drawA4Frame(writer, p.drawing_title);
+
+                const drawScale = 1; // DXF is usually 1:1
+                const offX = 80;
+                const offsetY = 100;
+
+                // --- Geometry ---
+                for (let i = 0; i < pts.length - 1; i++) {
+                    const x1 = pts[i][0] * drawScale + offX;
+                    const y1 = pts[i][1] * drawScale + offsetY;
+                    const x2 = pts[i + 1][0] * drawScale + offX;
+                    const y2 = pts[i + 1][1] * drawScale + offsetY;
+
+                    writer.addLine(
+                        { x: x1, y: y1, z: 0 },
+                        { x: x2, y: y2, z: 0 },
+                    );
+                    writer.addLine(
+                        { x: x1, y: -pts[i][1] * drawScale + offsetY, z: 0 },
+                        {
+                            x: x2,
+                            y: -pts[i + 1][1] * drawScale + offsetY,
+                            z: 0,
+                        },
+                    );
+                }
+
+                // Center line
+                writer.addLine(
+                    { x: pts[0][0] * drawScale + offX - 5, y: offsetY, z: 0 },
+                    { x: p.oal * drawScale + offX + 5, y: offsetY, z: 0 },
+                    { lineType: "CENTER" },
+                );
+
+                // --- Dimensions ---
+                // 1. OAL
+                const oalY = offsetY + 50;
+                writer.addLine(
+                    { x: offX, y: oalY, z: 0 },
+                    { x: p.oal * drawScale + offX, y: oalY, z: 0 },
+                );
+                writer.addText(
+                    {
+                        x: (offX + p.oal * drawScale + offX) / 2,
+                        y: oalY + 2,
+                        z: 0,
+                    },
+                    2.5,
+                    `OAL=${p.oal.toFixed(2)}`,
+                );
+                // Simple extension lines
+                writer.addLine(
+                    { x: offX, y: offsetY + 5, z: 0 },
+                    { x: offX, y: oalY + 2, z: 0 },
+                );
+                writer.addLine(
+                    { x: p.oal * drawScale + offX, y: offsetY + 5, z: 0 },
+                    { x: p.oal * drawScale + offX, y: oalY + 2, z: 0 },
+                );
+
+                // 2. Cumulative Lengths
+                const lenStartY = offsetY + 15;
+                for (let i = 1; i <= p.s_steps; i++) {
+                    const l = p[`d${i}_l`];
+                    const xEnd = l * drawScale + offX;
+                    const yLevel = lenStartY + i * 6;
+                    writer.addLine(
+                        { x: offX, y: yLevel, z: 0 },
+                        { x: xEnd, y: yLevel, z: 0 },
+                    );
+                    writer.addText(
+                        { x: (offX + xEnd) / 2, y: yLevel + 1, z: 0 },
+                        2,
+                        `L=${l.toFixed(2)}`,
+                    );
+                    writer.addLine(
+                        { x: xEnd, y: offsetY + 5, z: 0 },
+                        { x: xEnd, y: yLevel + 2, z: 0 },
+                    );
+                }
+
+                // 3. Diameters (Using Config Settings)
+                for (let i = 1; i <= p.s_steps; i++) {
+                    const d = p[`d${i}`];
+                    const tp = p[`d${i}_tp`];
+                    const tm = p[`d${i}_tm`];
+                    const l = p[`d${i}_l`];
+                    const xStart = i === 1 ? 0 : p[`d${i - 1}_l`];
+                    const xMid = ((xStart + l) / 2) * drawScale + offX;
+
+                    const yTop = offsetY + (d / 2) * drawScale;
+                    const yBottom = offsetY - (d / 2) * drawScale;
+                    const labelX = offX - 15 - i * 12;
+
+                    writer.addLine(
+                        { x: xMid, y: yTop, z: 0 },
+                        { x: labelX - 2, y: yTop, z: 0 },
+                    );
+                    writer.addLine(
+                        { x: xMid, y: yBottom, z: 0 },
+                        { x: labelX - 2, y: yBottom, z: 0 },
+                    );
+                    writer.addLine(
+                        { x: labelX, y: yTop, z: 0 },
+                        { x: labelX, y: yBottom, z: 0 },
+                    );
+
+                    // Rotation Mapping (UI 0 = Vertical Bottom-To-Top = DXF 90)
+                    const textRot = (90 - s.diaRot + 360) % 360;
+
+                    const diaX = labelX + s.diaOffX;
+                    const diaY = offsetY;
+
+                    writer.addText(
+                        { x: diaX, y: diaY, z: 0 },
+                        s.diaSize * ptToMm,
+                        `%%c${d.toFixed(2)}`,
+                        { rotation: textRot },
+                    );
+
+                    // Tolerances
+                    const tRot = (90 - s.tolRot + 360) % 360;
+                    const valOffX = diaX + s.tolOffX;
+                    // Invert OffY because DXF is Y-up, but UI/PDF effectively use Y-down for offsets
+                    const valOffY = diaY - s.tolOffY;
+
+                    writer.addText(
+                        { x: valOffX, y: valOffY + s.tolGap / 2, z: 0 },
+                        s.tolSize * ptToMm,
+                        `+${tp.toFixed(3)}`,
+                        { rotation: tRot },
+                    );
+                    writer.addText(
+                        {
+                            x: valOffX + s.tolGapX,
+                            y: valOffY - s.tolGap / 2,
+                            z: 0,
+                        },
+                        s.tolSize * ptToMm,
+                        `${tm.toFixed(3)}`,
+                        { rotation: tRot },
+                    );
+                }
+
+                // 4. Shank
+                const shankX = p.oal * drawScale + offX + 15;
+                const sTop = offsetY + (p.shank_d / 2) * drawScale;
+                const sBottom = offsetY - (p.shank_d / 2) * drawScale;
+                writer.addLine(
+                    { x: p.oal * drawScale + offX, y: sTop, z: 0 },
+                    { x: shankX + 2, y: sTop, z: 0 },
+                );
+                writer.addLine(
+                    { x: p.oal * drawScale + offX, y: sBottom, z: 0 },
+                    { x: shankX + 2, y: sBottom, z: 0 },
+                );
+                writer.addLine(
+                    { x: shankX, y: sTop, z: 0 },
+                    { x: shankX, y: sBottom, z: 0 },
+                );
+
+                writer.addText(
+                    { x: shankX + s.diaOffX + 2, y: offsetY, z: 0 },
+                    s.diaSize * ptToMm,
+                    `%%c${p.shank_d.toFixed(2)}`,
+                    { rotation: (90 - s.diaRot + 360) % 360 },
+                );
+
+                const blob = new Blob([writer.stringify()], {
+                    type: "application/dxf",
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `profile_${p.drawing_title.replace(/\s+/g, "_") || "tool"}.dxf`;
+                a.click();
+            };
+
+            document.getElementById("export-pdf").onclick = () => {
+                const p = getParams();
+                const pts = calculateProfile(p);
+                const doc = new jsPDF({
+                    orientation: "landscape",
+                    unit: "mm",
+                    format: "a4",
+                });
+
+                // --- Load Custom Settings ---
+                const saved = localStorage.getItem("scorpio_dim_settings");
+                const s = saved
+                    ? JSON.parse(saved)
+                    : {
+                          diaSize: 9,
+                          diaRot: 0,
+                          diaOffX: -8,
+                          tolSize: 7,
+                          tolOffX: -2.5,
+                          tolOffY: -21,
+                          tolGapX: 6,
+                          tolRot: 0,
+                          tolGap: 0.5,
+                      };
+
+                // --- Helper: Draw Arrowhead ---
+                const addArrow = (x, y, ang) => {
+                    const size = 1.2;
+                    doc.line(
+                        x,
+                        y,
+                        x + size * Math.cos(ang + 2.8),
+                        y + size * Math.sin(ang + 2.8),
+                    );
+                    doc.line(
+                        x,
+                        y,
+                        x + size * Math.cos(ang - 2.8),
+                        y + size * Math.sin(ang - 2.8),
+                    );
+                };
+
+                // Colors & Style
+                doc.setDrawColor(60, 60, 60);
+
+                // --- A4 Frame & Title Block ---
+                doc.rect(10, 10, 277, 190);
+                doc.setLineWidth(0.5);
+                doc.rect(212, 10, 75, 25);
+
+                doc.setFontSize(12);
+                doc.text(p.drawing_title || "SCORPIO TOOL PROFILE", 215, 22);
+                doc.setFontSize(8);
+                doc.text(
+                    `SCALE: 2:1   DATE: ${new Date().toLocaleDateString()}`,
+                    215,
+                    30,
+                );
+
+                // Geometry Scale & Offset
+                const drawScale = 2;
+                const offX = 70;
+                const offsetY = 145;
+
+                // --- Geometry ---
+                doc.setDrawColor(0, 0, 0);
+                doc.setLineWidth(0.4);
+                for (let i = 0; i < pts.length - 1; i++) {
+                    doc.line(
+                        pts[i][0] * drawScale + offX,
+                        pts[i][1] * drawScale + offsetY,
+                        pts[i + 1][0] * drawScale + offX,
+                        pts[i + 1][1] * drawScale + offsetY,
+                    );
+                    doc.line(
+                        pts[i][0] * drawScale + offX,
+                        -pts[i][1] * drawScale + offsetY,
+                        pts[i + 1][0] * drawScale + offX,
+                        -pts[i + 1][1] * drawScale + offsetY,
+                    );
+                }
+
+                // Center Line
+                doc.setDrawColor(150, 0, 0);
+                doc.setLineWidth(0.2);
+                doc.setLineDash([2, 1]);
+                doc.line(
+                    pts[0][0] * drawScale + offX - 5,
+                    offsetY,
+                    p.oal * drawScale + offX + 5,
+                    offsetY,
+                );
+                doc.setLineDash([]);
+
+                // --- Dimensions ---
+                doc.setDrawColor(100, 100, 100);
+                doc.setLineWidth(0.2);
+
+                // 1. OAL Dimension
+                const oalY = 30;
+                doc.line(offX, oalY, p.oal * drawScale + offX, oalY);
+                addArrow(offX, oalY, Math.PI);
+                addArrow(p.oal * drawScale + offX, oalY, 0);
+
+                doc.setFontSize(7);
+                doc.text(
+                    `OAL=${p.oal.toFixed(2)}`,
+                    (offX + p.oal * drawScale + offX) / 2,
+                    oalY - 1,
+                    { align: "center" },
+                );
+                doc.line(offX, offsetY - 20, offX, oalY - 2);
+                doc.line(
+                    p.oal * drawScale + offX,
+                    offsetY - 20,
+                    p.oal * drawScale + offX,
+                    oalY - 2,
+                );
+
+                // 2. Cumulative Lengths
+                const startY = offsetY - 28;
+                const spacing = 5;
+                for (let i = 1; i <= p.s_steps; i++) {
+                    const l = p[`d${i}_l`];
+                    const xEnd = l * drawScale + offX;
+                    const yLevel = startY - (i - 1) * spacing;
+
+                    doc.line(xEnd, offsetY - 20, xEnd, yLevel - 2);
+                    doc.line(offX, yLevel, xEnd, yLevel);
+                    addArrow(offX, yLevel, Math.PI);
+                    addArrow(xEnd, yLevel, 0);
+
+                    doc.setFontSize(7);
+                    doc.text(
+                        `L=${l.toFixed(2)}`,
+                        (offX + xEnd) / 2,
+                        yLevel - 1,
+                        { align: "center" },
+                    );
+                }
+
+                // 3. Diameter Dimensions (Using Custom Settings)
+                for (let i = 1; i <= p.s_steps; i++) {
+                    const d = p[`d${i}`];
+                    const tp = p[`d${i}_tp`];
+                    const tm = p[`d${i}_tm`];
+                    const l = p[`d${i}_l`];
+
+                    const xStart = i === 1 ? 0 : p[`d${i - 1}_l`];
+                    const xMid = ((xStart + l) / 2) * drawScale + offX;
+
+                    const yTop = offsetY - (d / 2) * drawScale;
+                    const yBottom = offsetY + (d / 2) * drawScale;
+                    const labelX = offX - 10 - i * 10;
+
+                    if (labelX > 10) {
+                        doc.line(xMid, yTop, labelX - 2, yTop);
+                        doc.line(xMid, yBottom, labelX - 2, yBottom);
+                        doc.line(labelX, yTop, labelX, yBottom);
+                        addArrow(labelX, yTop, -Math.PI / 2);
+                        addArrow(labelX, yBottom, Math.PI / 2);
+
+                        // Apply Custom Styles (Aligned with Preview)
+                        // Mapping: UI 0 deg -> jsPDF 90 deg (Vertical Bottom-to-Top)
+                        const dAngle = (90 - s.diaRot + 360) % 360;
+                        const tAngle = (90 - s.tolRot + 360) % 360;
+
+                        doc.setFontSize(s.diaSize);
+                        doc.text(
+                            `ø${d.toFixed(2)}`,
+                            labelX + s.diaOffX,
+                            offsetY,
+                            { angle: dAngle, align: "center" },
+                        );
+
+                        doc.setFontSize(s.tolSize);
+                        const valOffX = labelX + s.diaOffX + s.tolOffX;
+                        const valOffY = offsetY + s.tolOffY;
+
+                        doc.text(
+                            `+${tp.toFixed(3)}`,
+                            valOffX,
+                            valOffY - s.tolGap / 2,
+                            { angle: tAngle, align: "left" },
+                        );
+                        doc.text(
+                            `${tm.toFixed(3)}`,
+                            valOffX + s.tolGapX,
+                            valOffY + s.tolGap / 2,
+                            { angle: tAngle, align: "left" },
+                        );
+                    }
+                }
+
+                // 4. Shank Diameter
+                const shankX = p.oal * drawScale + offX + 10;
+                if (shankX < 287) {
+                    const sTop = offsetY - (p.shank_d / 2) * drawScale;
+                    const sBottom = offsetY + (p.shank_d / 2) * drawScale;
+                    doc.line(p.oal * drawScale + offX, sTop, shankX + 2, sTop);
+                    doc.line(
+                        p.oal * drawScale + offX,
+                        sBottom,
+                        shankX + 2,
+                        sBottom,
+                    );
+                    doc.line(shankX, sTop, shankX, sBottom);
+                    addArrow(shankX, sTop, -Math.PI / 2);
+                    addArrow(shankX, sBottom, Math.PI / 2);
+
+                    const shankAngle = (90 - s.diaRot + 360) % 360;
+                    doc.setFontSize(s.diaSize);
+                    doc.text(
+                        `ø${p.shank_d.toFixed(2)}`,
+                        shankX + s.diaOffX + 1.5,
+                        offsetY,
+                        { angle: shankAngle, align: "center" },
+                    );
+                }
+
+                doc.save(
+                    `profile_${p.drawing_title.replace(/\s+/g, "_") || "tool"}.pdf`,
+                );
+            };
+
+            stepsInput.onchange = createAccordions;
+            createAccordions();
+        });
+    </script>
+</Layout>
+
+<style is:global>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #27272a;
+        border-radius: 10px;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+</style>
