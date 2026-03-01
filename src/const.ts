@@ -9,13 +9,10 @@ export const NAV_LINKS = [
   { href: '/carbide-info', label: 'Carbide info' },
   { href: '/graph', label: 'Graphs' },
   { href: '/calculator', label: 'Calculators' },
-<<<<<<< HEAD
   { href: '/code-apps', label: 'CodeApps' },
-=======
   // { href: '/dxf-generator', label: 'DXF Generator' },
   // { href: '/profile-generator', label: 'Profile Generator' },
   // { href: '/tool-profile', label: 'Tool profile' },
->>>>>>> b45868472e2f5dca7c40e7130fd3e6038e89bc35
 
   // { href: '/test', label: 'Test Page' },
   // { href: 'https://github.com/McKenzi84/ScorpioAstro', label: 'GitHub' },
