@@ -10,6 +10,7 @@ export const NAV_LINKS = [
   { href: '/carbide-info', label: 'Carbide info' },
   { href: '/graph', label: 'Graphs' },
   { href: '/calculator', label: 'Calculators' },
+  { href: '/code-apps', label: 'CodeApps' },
   // { href: '/dxf-generator', label: 'DXF Generator' },
   // { href: '/profile-generator', label: 'Profile Generator' },
   // { href: '/tool-profile', label: 'Tool profile' },
