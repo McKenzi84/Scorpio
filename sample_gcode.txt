@@ -1,0 +1,29 @@
+Simple g-code for testing purposes
+
+00060 (AE25059) ;
+M01 ;
+
+G98 G28 Y0 ;
+G28 X0 ;
+
+M03 S3700 ;
+
+(POZYCJA STARTOWA - taka sama jak w bazowym)
+G90 G01 X[111.285-05] F500 ;
+G90 G01 Y[-93.460+0.5] F500 ;
+
+(START PROFILU)
+G91 ;
+
+(P1 -> P2 linia)
+G01 X-2.582 Y-2.582 F5.0 ;
+
+(P2 -> P3 łuk R1.5 CW)
+G02 X-1.009 Y-0.439 R1.5 F5.0 ;
+
+M05 ;
+
+G91 G28 Y0 ;
+G91 G28 X0 ;
+
+M30 ;

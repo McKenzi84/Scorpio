@@ -13,6 +13,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "@tarikjabiri/dxf": "^2.8.9",
     "astro": "^5.17.1",
+    "dxf-parser": "^1.1.2",
     "tailwindcss": "^4.1.18"
   }
 }
