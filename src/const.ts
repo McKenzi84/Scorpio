@@ -6,7 +6,7 @@ export const NAV_LINKS = [
   // { href: '/', label: 'Home' },
   // { href: '/calculator', label: 'Calculators' },
   { href: '/g-code', label: 'G-Code' },
-  { href: '/pdf-compressor', label: 'PDF Compressor' },
+  { href: '/pdf_compressor', label: 'PDF Compressor' },
   // { href: '/result', label: 'Results' },
   { href: '/carbide-info', label: 'Carbide info' },
   { href: '/graph', label: 'Graphs' },
