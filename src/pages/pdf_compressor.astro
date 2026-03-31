@@ -505,16 +505,20 @@ import Layout from "../layouts/Layout.astro";
                             continue;
                         }
 
-                        const rawData = obj.contents;
-                        let mime = "image/jpeg";
-                        if (
-                            filterName.includes("Flate") ||
-                            filterName.includes("LZW")
-                        )
-                            mime = "image/png";
+                        // Only process pure DCTDecode (JPEG) streams.
+                        // FlateDecode/LZW raw contents are not loadable as
+                        // images by the browser and must be skipped.
+                        if (!filterName.includes("DCT")) {
+                            log(
+                                `Skipping image ${idx}: non-JPEG filter (${filterName}).`,
+                                "warn",
+                            );
+                            continue;
+                        }
 
+                        const rawData = obj.contents;
                         const blob = new Blob([rawData], {
-                            type: mime,
+                            type: "image/jpeg",
                         });
                         const blobUrl = URL.createObjectURL(blob);
 
@@ -522,22 +526,14 @@ import Layout from "../layouts/Layout.astro";
                             const img = await loadImage(blobUrl);
                             const canvas = document.createElement("canvas");
 
-                            // Scale logic: reduction based on quality
-                            let scale = 1.0;
-                            if (qualityValue < 30) scale = 0.5;
-                            else if (qualityValue < 60) scale = 0.75;
-
-                            canvas.width = Math.round(width * scale);
-                            canvas.height = Math.round(height * scale);
+                            // Keep original pixel dimensions so the PDF page
+                            // content stream (transformation matrix) continues
+                            // to render the image at the correct size/position.
+                            canvas.width = width;
+                            canvas.height = height;
 
                             const ctx = canvas.getContext("2d");
-                            ctx.drawImage(
-                                img,
-                                0,
-                                0,
-                                canvas.width,
-                                canvas.height,
-                            );
+                            ctx.drawImage(img, 0, 0, width, height);
 
                             const compressedBlob = await new Promise(
                                 (resolve) =>
@@ -563,17 +559,20 @@ import Layout from "../layouts/Layout.astro";
                                     PDFName.of("Length"),
                                     context.obj(compressedData.length),
                                 );
-
-                                if (scale !== 1.0) {
-                                    obj.dict.set(
-                                        PDFName.of("Width"),
-                                        context.obj(canvas.width),
-                                    );
-                                    obj.dict.set(
-                                        PDFName.of("Height"),
-                                        context.obj(canvas.height),
-                                    );
-                                }
+                                // Canvas always produces RGB JPEG (3 channels,
+                                // 8 bits). Updating ColorSpace and
+                                // BitsPerComponent is critical: leaving the old
+                                // values (e.g. DeviceGray or DeviceCMYK) causes
+                                // PDF viewers to mis-interpret bytes-per-row,
+                                // which renders as wrong scaling / distortion.
+                                obj.dict.set(
+                                    PDFName.of("ColorSpace"),
+                                    PDFName.of("DeviceRGB"),
+                                );
+                                obj.dict.set(
+                                    PDFName.of("BitsPerComponent"),
+                                    context.obj(8),
+                                );
                                 log(
                                     `Image ${idx} reduced: ${formatBytes(rawData.length)} -> ${formatBytes(compressedData.length)}`,
                                 );
